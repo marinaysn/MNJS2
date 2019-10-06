@@ -5,8 +5,8 @@ const rootDir = require('../util/path');
 const routes = express.Router()
 
 
-routes.get('/',(req, res, next) => {
-      res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+routes.get('/direction',(req, res, next) => {
+      res.sendFile(path.join(rootDir, 'views', 'direction.html'));
   });
 
   module.exports = routes;
