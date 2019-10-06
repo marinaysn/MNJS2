@@ -5,16 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>My Shopping List</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      header {
+        width: 100%;
+        height: 100%;
+        background: rgb(241, 240, 168);
+        padding: 0 1.5rem;
+      }
+
+      .main-header {
+      }
+
+      .main-header-nav {
+        height: 100%;
+        display: flex;
+      }
+
+      .main-header-ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
+
+      .main-header-li {
+        border-top: 2px solid rgb(100, 75, 5);
+        border-bottom: 2px solid rgb(100, 75, 5);
+        border-right: 2px solid rgb(100, 75, 5);
+        border-radius: 0 25px 25px 0;
+        padding: 5px;
+        width: 18%;
+        text-align: center;
+        margin-left: -15px;
+      }
+
+    
+      .firstItem {
+        border-left: 3px solid rgb(100, 75, 5);
+        margin-left: -25px;
+        margin-right: -5px; 
+
+      }
+
+      .main-header-li a {
+        text-decoration: none;
+      }
+
+      .main-header-li a:hover,
+      .main-header-li a:active,
+      .main-header-li a.active {
+        color: rgb(228, 214, 238);
+      }
+
+      .main-header-li:hover
+      {
+        background: rgb(54, 7, 85);
+        border-radius: 25px;
+        color: rgb(228, 214, 238);
+        margin-left: -25px;
+        padding-right: 15px;
+      }
+
+    
+      .firstItem:hover {
+        border-left: 3px solid rgb(100, 75, 5);
+        border-radius: 0 25px 25px 0;
+         margin-right: -10px; 
+      }
+
+  
+
+
+    </style>
   </head>
   <body>
-    <header>
-      <nav>
-        <ul>
-          <li><a href="/">Shop</a></li>
-          <li><a href="/admin/addProduct">Add Product</a></li>
-          <li><a href="/about">About Us</a></li>
-          <li><a href="/direction">Directioin</a></li>
-          <li><a href="/login">LogIn</a></li>
+    <header class="main-header">
+      <nav clang="main-header-nav">
+        <ul class="main-header-ul">
+          <li class="main-header-li firstItem active"><a href="/">My List</a></li>
+          <li class="main-header-li">
+            <a href="/admin/addProduct">Add Product</a>
+          </li>
+          <li class="main-header-li"><a href="/about">About Us</a></li>
+          <li class="main-header-li"><a href="/direction">Directioin</a></li>
+          <li class="main-header-li"><a href="/login">LogIn</a></li>
         </ul>
       </nav>
     </header>
@@ -24,6 +101,5 @@
       <p>List of All Products...</p>
       <p>Coming Soon</p>
     </main>
-    
   </body>
 </html>
