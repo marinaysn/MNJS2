@@ -9,7 +9,7 @@ router.get('/addProduct',(req, res, next) => {
 
     // res.sendFile(path.join(rootDir, 'views', 'addProduct.html'));
 
-     res.render('addProduct', {docTitle: 'Add Product'});
+     res.render('addProduct', {docTitle: 'Add Product', path: '/admin/addProduct'});
 
  });
  

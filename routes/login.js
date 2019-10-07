@@ -6,7 +6,8 @@ const routes = express.Router()
 
 
 routes.get('/login',(req, res, next) => {
-      res.sendFile(path.join(rootDir, 'views', 'login.html'));
+      //res.sendFile(path.join(rootDir, 'views', 'login.html'));
+      res.render('login', {docTitle: 'Sign In', path: '/login'})
   });
 
   module.exports = routes;

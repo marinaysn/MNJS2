@@ -5,7 +5,7 @@ const routes = express.Router()
 
 routes.get('/', (req, res, next) => {
     const products = adminData.products;
-    res.render('shop', {prods: products, docTitle: 'My Shopping List'});
+    res.render('shop', {prods: products, docTitle: 'My Shopping List', path: '/shop'});
 
 });
 

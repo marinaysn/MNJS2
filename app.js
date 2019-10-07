@@ -8,6 +8,7 @@ const login = require('./routes/login');
 const about = require('./routes/about');
 const direction = require('./routes/direction');
 
+//set template view engine
 const app = express();
 app.set('view engine', 'pug');
 app.set('views', 'views');
@@ -22,7 +23,8 @@ app.use(direction);
 app.use(shopRoutes);
 
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'views', 'pageNotFound.html'))
+
+  res.status(404).render('pageNotfound', {docTitle: 'Page Not Found'});
 });
 
 app.listen(3000);
