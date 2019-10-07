@@ -13,9 +13,10 @@ router.get('/addProduct',(req, res, next) => {
     // res.render('addProduct', {docTitle: 'Add Product', path: '/admin/addProduct'});
 
     // //use this for HANDLEBARS template (uncomment)
-     res.render('addProduct', {docTitle: 'Add Product', path: '/admin/addProduct', activeAddProduct: true, productCSS: true});
+    // res.render('addProduct', {docTitle: 'Add Product', path: '/admin/addProduct', activeAddProduct: true, productCSS: true});
 
-
+    // //use this for HANDLEBARS and EJS template (comment)
+    res.render('addProduct', {docTitle: 'Add Product', path: '/admin/addProduct', activeAddProduct: true, productCSS: true});
 
  });
  

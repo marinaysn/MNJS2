@@ -1,0 +1,13 @@
+<header class="main-header">
+    <nav clang="main-header-nav">
+      <ul class="main-header-ul">
+        <li class="main-header-li firstItem <%= path === '/shop' ? 'active' : '' %>"><a href="/">My List</a></li>
+        <li class="main-header-li <%= path === '/admin/addProduct' ? 'active' : '' %>">
+          <a href="/admin/addProduct">Add Product</a>
+        </li>
+        <li class="main-header-li <%= path === '/about' ? 'active' : '' %>"><a href="/about">About Us</a></li>
+        <li class="main-header-li <%= path === '/direction' ? 'active' : '' %>"><a href="/direction">Directioin</a></li>
+        <li class="main-header-li <%= path === '/login' ? 'active' : '' %>"><a href="/login">LogIn</a></li>
+      </ul>
+    </nav>
+  </header>
