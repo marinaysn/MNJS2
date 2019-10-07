@@ -7,10 +7,20 @@ const path = require('path');
 const login = require('./routes/login');
 const about = require('./routes/about');
 const direction = require('./routes/direction');
+const expressHbs = require('express-handlebars');
 
-//set template view engine
+
 const app = express();
-app.set('view engine', 'pug');
+
+//set template view engines
+app.engine('handlebars', expressHbs());
+//to use handlebars
+app.set('view engine', 'handlebars');
+
+//to use Pug/jade (uncomment to use)
+//app.set('view engine', 'pug');
+
+// epcify where templates are
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
