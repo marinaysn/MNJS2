@@ -6,8 +6,12 @@ const routes = express.Router()
 
 
 routes.get('/login',(req, res, next) => {
-      //res.sendFile(path.join(rootDir, 'views', 'login.html'));
-      res.render('login', {docTitle: 'Sign In', path: '/login'})
-  });
+      
+      // //use this for PUG template (uncomment)
+        // res.render('login', {docTitle: 'Sign In', path: '/login'})
+
+      // //use this for HANDLEBARS template (uncomment)
+      res.render('login', {docTitle: 'Sign In', path: '/login' , activeLogin: true , productCSS: true})
+    });
 
   module.exports = routes;

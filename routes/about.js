@@ -6,7 +6,13 @@ const routes = express.Router()
 
 routes.get('/about',(req, res, next) => {
      // res.sendFile(path.join(rootDir, 'views', 'about.html'));
-     res.render('about', {docTitle: 'About Us', path: '/about'})
+
+     // //use this fofr PUG template (uncomment)
+     //res.render('about', {docTitle: 'About Us', path: '/about'})
+
+     // //use this for PUG template (uncomment)
+     res.render('about', {docTitle: 'About Us', path: '/about', activeAbout: true})
+
   });
 
   module.exports = routes;
