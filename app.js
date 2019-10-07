@@ -13,9 +13,9 @@ const expressHbs = require('express-handlebars');
 const app = express();
 
 //set template view engines
-app.engine('handlebars', expressHbs());
+app.engine('hbs', expressHbs({defaultLayout: false}));
 //to use handlebars
-app.set('view engine', 'handlebars');
+app.set('view engine', 'hbs');
 
 //to use Pug/jade (uncomment to use)
 //app.set('view engine', 'pug');
