@@ -11,7 +11,7 @@ routes.get('/login',(req, res, next) => {
         // res.render('login', {docTitle: 'Sign In', path: '/login'})
 
       // //use this for HANDLEBARS template (uncomment)
-      res.render('login', {docTitle: 'Sign In', path: '/login' , activeLogin: true , productCSS: true})
+      res.render('login', {docTitle: 'Sign In', path: '/login' , activeLogIn: true , productCSS: true})
     });
 
   module.exports = routes;

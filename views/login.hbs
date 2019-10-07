@@ -1,11 +1,16 @@
 <main>
   <h1>Log In</h1>
 
-  <form action="/username" method="POST">
-    <input type="text" name="username" /> <br /><br />
-    <input type="text" name="password" /><br /><br />
+  <form class="product-form" action="/username" method="POST">
+  <div class="form-control">
+    <label for="username">Username</label>
+    <input type="text" name="username" />
+    <label for="password">Password</label>
+    <input type="text" name="password" />
     <button type="submit">LogIn</button>
     <button type="signin">Create New Account</button>
+
+    </div>
   </form>
 
 </main>

@@ -12,18 +12,27 @@ const expressHbs = require('express-handlebars');
 
 const app = express();
 
+// ****** handlebars ******** //
+//to use handlebars
 //set template view engines
 //use 'defaultLayout: false', if no layout is set
-app.engine('hbs', expressHbs({
-  defaultLayout: 'mainHbsLayout.hbs',
-  layouts: 'views/layouts',
-  extname: 'hbs'
-}));
-//to use handlebars
-app.set('view engine', 'hbs');
 
+// app.engine('hbs', expressHbs({
+//   defaultLayout: 'mainHbsLayout.hbs',
+//   layouts: 'views/layouts',
+//   extname: 'hbs'
+// }));
+// //to use handlebars
+// app.set('view engine', 'hbs');
+
+
+// ****** PUG / JADE ******** //
 //to use Pug/jade (uncomment to use)
 //app.set('view engine', 'pug');
+
+
+// ****** EJS ******** //
+app.set('view engine', 'ejs');
 
 // set where templates are
 app.set('views', 'views');
@@ -39,7 +48,7 @@ app.use(shopRoutes);
 
 app.use((req, res, next) => {
 
-  res.status(404).render('pageNotfound', {docTitle: 'Page Not Found'});
+  res.status(404).render('pageNotFound', {docTitle: 'Page Not Found'});
 });
 
 app.listen(3000);
