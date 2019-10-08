@@ -1,0 +1,20 @@
+<%- include('includes/top') %>
+
+<main>
+<% if (userArray.length > 0) { %>
+    <% console.log(userArray.length) %>
+    <div>
+        <% for (let u of userArray) { %>
+            <% console.log(u.name) %>
+            <div>
+                    <p>Name: </p>
+                <p><%= u.name %></p>
+            </div>
+    <% } %>
+    </div>
+<% } else { %>
+        <p>No users added yet</p>
+<% } %>
+</main>
+    
+<%- include('includes/bottom') %>
