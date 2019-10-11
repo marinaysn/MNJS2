@@ -3,7 +3,7 @@ const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
     // //use this for HANDLEBARS and EJS template (comment)
-    res.render('addProduct', { docTitle: 'Add Product', path: '/admin/addProduct', activeAddProduct: true, productCSS: true });
+    res.render('admin/addProduct', { docTitle: 'Add Product', path: '/admin/addProduct', activeAddProduct: true, productCSS: true });
 }
 
 exports.postAddProduct = (req, res, next) => {
@@ -19,11 +19,11 @@ exports.displayProduct = (req, res, next) => {
     const products = Product.fetchAll((products) => {
 
         // //use this for HANDLEBARS and EJS template (uncomment)
-        res.render('shop',
+        res.render('shop/productList',
             {
                 prods: products,
                 docTitle: 'My Shopping List',
-                path: '/shop',
+                path: '/',
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
