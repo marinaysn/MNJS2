@@ -8,6 +8,10 @@ const path = require('path');
 const login = require('./routes/login');
 const about = require('./routes/about');
 const direction = require('./routes/direction');
+//l - 107
+const cartRoutes = require('./routes/cart');
+const catalogRoutes = require('./routes/catalog');
+
 
 const errorsController = require('./controllers/errors');
 const app = express();
@@ -26,6 +30,10 @@ app.use(login);
 app.use(about);
 app.use(direction);
 app.use(shopRoutes);
+
+//l - 107
+app.use(cartRoutes);
+app.use(catalogRoutes);
 
 app.use(
   errorsController.get404error

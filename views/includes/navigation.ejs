@@ -2,11 +2,26 @@
     <nav clang="main-header-nav">
       <ul class="main-header-ul">
         <li class="main-header-li firstItem <%= path === '/shop' ? 'active' : '' %>"><a href="/">My List</a></li>
+
+        <li class="main-header-li <%= path === '/products' ? 'active' : '' %>">
+          <a href="/listOfProducts">Products</a>
+        </li>
+
+
         <li class="main-header-li <%= path === '/admin/addProduct' ? 'active' : '' %>">
           <a href="/admin/addProduct">Add Product</a>
         </li>
+
+        <li class="main-header-li <%= path === '/admin/products' ? 'active' : '' %>">
+          <a href="/admin/products">Admin Product</a>
+        </li>
+
+        <li class="main-header-li <%= path === '/cart' ? 'active' : '' %>">
+          <a href="/cart">My Cart</a>
+        </li>
+        
         <li class="main-header-li <%= path === '/about' ? 'active' : '' %>"><a href="/about">About Us</a></li>
-        <li class="main-header-li <%= path === '/direction' ? 'active' : '' %>"><a href="/direction">Directioin</a></li>
+        <li class="main-header-li <%= path === '/direction' ? 'active' : '' %>"><a href="/direction">Direction</a></li>
         <li class="main-header-li <%= path === '/login' ? 'active' : '' %>"><a href="/login">LogIn</a></li>
       </ul>
     </nav>
