@@ -1,16 +1,12 @@
 // to start run 'node .\app.js' or 'npm start'
 const express = require('express');
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
 const bodyParser = require('body-parser');
 const path = require('path');
+
 const login = require('./routes/login');
 const about = require('./routes/about');
-const direction = require('./routes/direction');
-//l - 107
-const cartRoutes = require('./routes/cart');
-const catalogRoutes = require('./routes/catalog');
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
 
 const errorsController = require('./controllers/errors');
@@ -28,12 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', adminRoutes);
 app.use(login);
 app.use(about);
-app.use(direction);
 app.use(shopRoutes);
-
-//l - 107
-app.use(cartRoutes);
-app.use(catalogRoutes);
 
 app.use(
   errorsController.get404error

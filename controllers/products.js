@@ -57,4 +57,12 @@ exports.getCatalog = (req, res, next) =>{
     res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/listOfProducts', activeDirection: true })
 }
 
+exports.getAdminProducts = (req, res, next) =>{
+    res.render('admin/adminProducts', { docTitle: 'List Of Products', path: '/adminProducts', activeDirection: true })
+}
+
+exports.getCheckOut = (req, res, next) =>{
+    res.render('admin/checkout', { docTitle: 'Checkout', path: '/checkout', activeDirection: true })
+}
+
 

@@ -1,8 +1,9 @@
 const express = require('express');
-const aboutController = require('../controllers/information')
+const infoController = require('../controllers/information')
 
 const routes = express.Router()
 
-routes.get('/about', aboutController.getAboutPageController);
+routes.get('/about', infoController.getAboutPageController);
 
+routes.get('/direction', infoController.getDirectionController);
   module.exports = routes;
