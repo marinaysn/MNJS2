@@ -44,6 +44,16 @@ exports.displayProduct = (req, res, next) => {
     });
 };
 
+exports.getProductByID  = (req, res, next) =>{
+    const productId = req.params.productId;
+    console.log(productId)
+    res.redirect('/')
+    
+    // res.render('shop/orders', { docTitle: 'My Orders', path: '/orders', activeDirection: true })
+}
+
+
+
 exports.getIndex = (req, res, next) =>{
     const products = Product.fetchAll((products) => {
         res.render('shop/index',
@@ -61,5 +71,8 @@ exports.getIndex = (req, res, next) =>{
 exports.getMyOrders  = (req, res, next) =>{
     res.render('shop/orders', { docTitle: 'My Orders', path: '/orders', activeDirection: true })
 }
+
+
+
 
 

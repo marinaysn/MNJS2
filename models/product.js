@@ -28,11 +28,13 @@ module.exports = class Product {
     }
 
     save() {
+        //this.id = (Math.floor(Math.random() * 100)).toString;
         const p = path.join(rootDir, 'data', 'products.json');
         let products = [];
         fs.readFile(p, (err, fileContend) => {
 
             getProductsFromFile(products => {
+                this.id = products.length + 1
                 products.push(this);
 
                 fs.writeFile(p, JSON.stringify(products), (err) => {

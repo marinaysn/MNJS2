@@ -1,3 +1,5 @@
+<!-- same as productList for now -->
+
 <%- include('../includes/head.ejs') %>
 
     <link rel="stylesheet" href="/css/product.css">
@@ -29,7 +31,10 @@
             </p>
           </div>
           <div class="card__actions">
-            <button class="btn">Add to Cart</button>
+              <a href="/productList/<%= p.id %>" class="btn editBtn">Details</a>
+            <form action="/addToCart" method="POST">
+              <button class="btn">Add to Cart</button>
+          </form>
           </div>
         </article>
         <% } %>
