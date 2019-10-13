@@ -61,7 +61,7 @@ body {
     background: rgb(107, 240, 240);
     border-left: 2px solid rgb(100, 75, 5);
     border-radius: 25px;
-    color:rgb(10, 42, 78);
+    color:rgb(12, 194, 12);
     margin-left: -25px;
     padding-right: 15px;
   }
@@ -89,25 +89,7 @@ body {
     border-radius: 0 25px 25px 0;
     margin-right: -10px;
   }
-  product-form{
-    width: 20rem;
-    max-width: 90%;
-    margin: auto;
-  }
-
-  .form-control label,
-  .form-control input {
-    display: block;
-    width: 80%;
-  }
-
-  .form-control input {
-    border: 1px solid rgb(6, 38, 68);
-    font: inherit;
-    border-radius: 5px;
-    margin: 5px 0 10px 0;
-  }
-
+ 
   button {
     font: inherit;
     border: 1pz solid rgb(14, 4, 66);

@@ -96,17 +96,25 @@ body {
   }
 
   .form-control label,
-  .form-control input {
+  .form-control input,
+  .form-control textarea {
     display: block;
     width: 80%;
   }
 
-  .form-control input {
+  .form-control input,
+  .form-control textarea {
     border: 1px solid rgb(6, 38, 68);
     font: inherit;
     border-radius: 5px;
     margin: 5px 0 10px 0;
   }
+
+  .form-control input:focus,
+  .form-control textarea:focus {
+    outline: #0b7e70;
+  }
+  
 
   button {
     font: inherit;
@@ -212,7 +220,7 @@ body {
 
 .title__decoration{
   text-decoration-line: underline;
-  text-decoration-style: wavy;
+  /* text-decoration-style: wavy; */
 }
 
 .product__price {
