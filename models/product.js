@@ -34,19 +34,27 @@ module.exports = class Product {
         fs.readFile(p, (err, fileContend) => {
 
             getProductsFromFile(products => {
-                this.id = products.length + 1
+                this.id = products.length + 1 + "";
                 products.push(this);
-
                 fs.writeFile(p, JSON.stringify(products), (err) => {
                 });
             });
-
-
-        })
-    }
+        });
+    };
 
     static fetchAll(callback) {
         getProductsFromFile(callback);
+    };
+
+    static findById(id, callback) {
+
+        getProductsFromFile(products => {
+           const productDetails=  products.find(p =>{
+               return p.id === id;
+           })
+           callback(productDetails);
+        });
+
     }
 
-}
+};

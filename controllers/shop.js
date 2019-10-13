@@ -35,8 +35,8 @@ exports.displayProduct = (req, res, next) => {
         res.render('shop/productList',
             {
                 prods: products,
-                docTitle: 'My Shopping List',
-                path: '/',
+                docTitle: 'All Products',
+                path: '/productList',
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
@@ -47,11 +47,13 @@ exports.displayProduct = (req, res, next) => {
 exports.getProductByID  = (req, res, next) =>{
     const productId = req.params.productId;
     console.log(productId)
-    res.redirect('/')
-    
-    // res.render('shop/orders', { docTitle: 'My Orders', path: '/orders', activeDirection: true })
-}
+    Product.findById(productId, product =>{
+        console.log(product)
+   
+    res.render('shop/productDetails', { docTitle: product.title, path: '/productDetails', prod: product, activeDirection: true })
 
+     });
+}
 
 
 exports.getIndex = (req, res, next) =>{
