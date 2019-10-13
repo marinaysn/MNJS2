@@ -1,3 +1,4 @@
+<div class="backdrop"></div>
 <header class="main-header">
     <nav clang="main-header-nav">
       <ul class="main-header-ul">
@@ -19,9 +20,16 @@
         <li class="main-header-li <%= path === '/cart' ? 'active' : '' %>">
           <a href="/cart">My Cart</a>
         </li>
+
+        <li class="main-header-li <%= path === '/orders' ? 'active' : '' %>">
+          <a href="/orders">My Orders</a>
+        </li>
+
         
-        <li class="main-header-li <%= path === '/about' ? 'active' : '' %>"><a href="/about">About Us</a></li>
-        <li class="main-header-li <%= path === '/direction' ? 'active' : '' %>"><a href="/direction">Direction</a></li>
+        <!-- <li class="main-header-li <%= path === '/about' ? 'active' : '' %>"><a href="/about">About Us</a></li>
+        <li class="main-header-li <%= path === '/direction' ? 'active' : '' %>"><a href="/direction">Direction</a></li> -->
+
+
         <li class="main-header-li <%= path === '/login' ? 'active' : '' %>"><a href="/login">LogIn</a></li>
       </ul>
     </nav>

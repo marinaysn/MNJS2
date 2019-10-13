@@ -1,13 +1,47 @@
+<!-- admin/products -->
+
 <%- include('../includes/head.ejs') %>
+
     <link rel="stylesheet" href="/css/product.css">
-
-
   </head>
   <body>
     <%- include('../includes/navigation.ejs') %>
 
     <main>
-        <h1>List of All Products</h1>
-        <p>Coming Soon</p>
+      <h1>My Products</h1>
+      <p>List of All Products</p>
+
+      <% if (prods.length > 0) { %>
+      <div class="grid">
+        <% for (let p of prods) { %>
+        <article class="card product-item">
+          <header class="card__header">
+            <h1 class="product__title title__decoration"><%= p.title %></h1>
+          </header>
+          <div class="card__image">
+            <img
+              src="<%= p.imageUrl %>"
+              alt="A Book"
+            />
+          </div>
+          <div class="card__content">
+            <h2 class="product__price">$<%= p.price %></h2>
+            <p class="product__description">
+                <%= p.description %>
+            </p>
+          </div>
+          <div class="card__actions">
+            <a href="/admin/editProduct" class="btn">Edit</a>
+            <form action="/admin/deleteProduct" method="POST">
+              <button class="btn" type="submit">Delete</button>
+            </form>
+           
+          </div>
+        </article>
+        <% } %>
+      </div>
+      <% } else { %>
+      <p>Your cart is empty</p>
+      <% } %>
       </main>
     <%- include('../includes/end.ejs') %>

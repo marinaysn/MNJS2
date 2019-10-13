@@ -58,4 +58,8 @@ exports.getIndex = (req, res, next) =>{
     }); 
 }
 
+exports.getMyOrders  = (req, res, next) =>{
+    res.render('shop/orders', { docTitle: 'My Orders', path: '/orders', activeDirection: true })
+}
+
 
