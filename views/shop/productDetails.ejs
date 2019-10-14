@@ -10,12 +10,10 @@
     <main>
       <h1><%= prod.title %></h1>
       
-      <% if (prod) { %>
+      <hr />
       <div class="grid">
         <article class="card product-item">
-          <header class="card__header">
-            <h1 class="product__title title__decoration"><%= prod.title %></h1>
-          </header>
+
           <div class="card__image">
             <img
               src="<%= prod.imageUrl %>"
@@ -29,14 +27,13 @@
             </p>
           </div>
           <div class="card__actions">
-            <form action="/addToCart" method="POST">
+            <!-- <form action="/cart" method="POST">
               <button class="btn">Add to Cart</button>
-          </form>
+              <input type="hidden" name="productId" value="<%=  prod.id %>">
+          </form> -->
+          <%- include('../include/addToCart.ejs') %>
           </div>
         </article>
       </div>
-      <% } else { %>
-      <p>No Products Selected </p>
-      <% } %>
       </main>
     <%- include('../includes/end.ejs') %>

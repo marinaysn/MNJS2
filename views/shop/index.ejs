@@ -32,9 +32,9 @@
           </div>
           <div class="card__actions">
               <a href="/productList/<%= p.id %>" class="btn editBtn">Details</a>
-            <form action="/addToCart" method="POST">
-              <button class="btn">Add to Cart</button>
-          </form>
+
+              <%- include('../includes/addToCart.ejs', {prod: p}) %>
+
           </div>
         </article>
         <% } %>

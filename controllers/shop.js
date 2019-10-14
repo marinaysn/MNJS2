@@ -23,6 +23,13 @@ exports.getMyCart = (req, res, next) =>{
     res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true })
 }
 
+exports.postToCart = (req, res, next) => {
+    const prodId = req.body.productId;
+
+    console.log(prodId);
+    res.redirect('/cart')
+}
+
 exports.getCheckOut = (req, res, next) =>{
     res.render('admin/checkout', { docTitle: 'Checkout', path: '/checkout', activeDirection: true })
 }
