@@ -1,8 +1,17 @@
 const Product = require('../models/product');
 
-exports.getAddProduct = (req, res, next) => {
+exports.getAddEditProduct = (req, res, next) => {
     // //use this for HANDLEBARS and EJS template (comment)
-    res.render('admin/addProduct', { docTitle: 'Add Product', path: '/admin/addProduct', activeAddProduct: true, productCSS: true });
+    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', activeAddProduct: true, productCSS: true });
+}
+
+exports.getEditProduct = (req, res, next) => {
+    
+    const editMode = req.query.edit;
+    if (editMode !== "true") {
+      return res.redirect('/');
+    }
+    res.render('admin/editProduct', { docTitle: 'mm Edit Product', path: 'admin/editProduct', editing: editMode });
 }
 
 exports.postAddProduct = (req, res, next) => {
