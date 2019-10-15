@@ -31,11 +31,18 @@
             </p>
           </div>
           <div class="card__actions">
+            <!-- <a href="/admin/editProduct/<%= p.id %>?edit=true" class="btn editBtn">Edit</a> -->
+            
+           <!-- <%- include('../includes/edit.ejs', {prod: p}) %> -->
+
+           <form action="/admin/deleteProduct" method="POST">  
+            
+            <a href="/admin/editProduct/<%= p.id %>?edit=true" class="btn editBtn">Edit</a>
+
+            <button class="btn">Delete</button>
            
-            <form action="/admin/deleteProduct" method="POST">
-               <a href="/admin/editProduct" class="btn editBtn">Edit</a>
-              <button class="btn" type="submit">Delete</button>
-            </form>
+        </form>
+
            
           </div>
         </article>
