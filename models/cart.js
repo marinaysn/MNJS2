@@ -3,6 +3,20 @@ const path = require('path');
 const rootDir = require('../util/path');
 const p = path.join(rootDir, 'data', 'cart.json');
 
+const getProductsFromFile = (callback) => {
+
+    fs.readFile(p, (err, fileContend) => {
+
+        if (err) {
+
+            return callback([]);
+        }
+        else {
+            callback(JSON.parse(fileContend));
+        }
+    })
+}
+
 module.exports = class Cart {
     
     static addProduct(id, price){
@@ -38,5 +52,34 @@ module.exports = class Cart {
         })
     })
 }
+
+    static deleteProduct(id, price){
+        fs.readFile(p, (err, fileContent)=>{
+         
+        if (err){
+            return;
+        }
+
+        let updatedCart = {...JSON.parse(fileContent)};
+        const product = updatedCart.products.find(prod => prod.id === id);
+
+        if (product) {
+        const prodQty = product.qty;
+        updatedCart.products = updatedCart.products.filter(prod => prod.id !== id);
+        console.log(updatedCart.totalCost)
+        console.log(price)
+        console.log(prodQty)
+        updatedCart.totalCost = updatedCart.totalCost - price * prodQty;
+        fs.writeFile(p, JSON.stringify(updatedCart), (err) =>{
+            console.log(err)
+        })
+        }
+        else return;
+    });
+}
+
+static fetchAll(callback) {
+    getProductsFromFile(callback);
+};
 
 }

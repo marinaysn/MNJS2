@@ -41,6 +41,15 @@ exports.postEditProduct  = (req, res, next) =>{
    res.redirect('/admin/listOfProducts')
 }
 
+exports.postDeletedProduct = (req, res, next) => {
+    const prodId =  req.body.productId;
+
+
+    Product.deleteByID(prodId);
+   res.redirect('/admin/listOfProducts')
+};
+
+
 exports.postAddProduct = (req, res, next) => {
     // products.push({title: req.body.title});
 
@@ -60,7 +69,7 @@ exports.displayAllProduct = (req, res, next) => {
         res.render('admin/listOfProducts',
             {
                 prods: products,
-                docTitle: 'Catalog of All Products',
+                docTitle: 'All Products in the Cart',
                 path: '/admin/listOfProducts'
             });
     });
@@ -71,7 +80,7 @@ exports.getAdminProducts = (req, res, next) =>{
     res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', activeDirection: true })
 }
 
-//same as displayAllProduct for now
+
 exports.getCatalog = (req, res, next) =>{
     res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', activeDirection: true })
 }
