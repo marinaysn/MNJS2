@@ -81,7 +81,7 @@ exports.displayAllProductInCart = (req, res, next) => {
 
     exports.getProductByID = (req, res, next) => {
         const productId = req.params.productId;
-        console.log(productId)
+        // console.log(productId)
         Product.findById(productId, product => {
             console.log(product)
 
@@ -110,6 +110,16 @@ exports.displayAllProductInCart = (req, res, next) => {
     }
 
 
-
+exports.postcartDeleteItem =(req, res, next)=>{
+    const prodId =  req.body.productId;
+    const prodPrice = req.body.productIdPrice;
+    // console.log(prodPrice)
+    // console.log(prodId)
+    Product.findById(prodId, product =>{
+        Cart.deleteProduct(prodId, product.price);
+        res.redirect('/cart')
+    })
+    
+}
 
 
