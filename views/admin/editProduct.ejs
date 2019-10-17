@@ -4,7 +4,7 @@
 
   </head>
   <body>
-    <%- include('../includes/navigation.ejs') %>XSS 
+    <%- include('../includes/navigation.ejs') %> 
 
     <main>
       <form class="product-form" action="/admin/<% if(editing) { %>editProduct<% } else { %>addProduct<% }%>" method="POST">

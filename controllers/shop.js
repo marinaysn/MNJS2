@@ -84,12 +84,19 @@ exports.displayAllProductInCart = (req, res, next) => {
     exports.getProductByID = (req, res, next) => {
         const productId = req.params.productId;
         // console.log(productId)
-        Product.findById(productId, product => {
-            console.log(product)
-
-            res.render('shop/productDetails', { docTitle: product.title, path: '/productDetails', prod: product, activeDirection: true })
-
-        });
+        Product.findById(productId)
+        .then(([product, fieldData]) =>{
+           
+            res.render('shop/productDetails', 
+            { 
+            docTitle: product[0].title, 
+            path: '/productDetails', 
+            prod: product[0], 
+            activeDirection: true })
+        }
+        )
+        .catch(err => console.log(err));
+      
     }
 
     exports.getIndex = (req, res, next) => {

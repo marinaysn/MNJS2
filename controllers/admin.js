@@ -57,8 +57,13 @@ exports.postAddProduct = (req, res, next) => {
     const imgUrl = req.body.imageUrl;
 
     const product = new Product(title, imgUrl, desc, price, null);
-    product.save();
-    res.redirect(301, '/');
+    
+    product.save()
+    .then(()=>{
+        res.redirect('/')
+    })
+    .catch(err => console.log(err));
+    
 }
 
 exports.displayAllProduct = (req, res, next) => {
@@ -74,10 +79,7 @@ exports.displayAllProduct = (req, res, next) => {
 
     })
     .catch( err => console.log(err))
-
-
-        
-    
+   
 };
 
 
