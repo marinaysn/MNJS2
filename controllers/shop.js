@@ -4,19 +4,20 @@ const Cart = require('../models/cart');
 
 exports.getMyCartView = (req, res, next) => {
 
-    const products = Product.fetchAll((products) => {
-
-        // //use this for HANDLEBARS and EJS template (uncomment)
+    const products = Product.fetchAll()
+    .then(([rows, fieldData]) =>{
         res.render('shop/cart',
             {
-                prods: products,
+                prods: rows,
                 docTitle: 'My Shopping List',
                 path: '/',
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
             });
-    });
+
+    })
+    .catch(err => console.log(err))  
 };
 
 exports.getMyCart = (req, res, next) => {
@@ -38,24 +39,25 @@ exports.getCheckOut = (req, res, next) => {
 
 exports.displayProduct = (req, res, next) => {
 
-    const products = Product.fetchAll((products) => {
-
-        // //use this for HANDLEBARS and EJS template (uncomment)
-        res.render('shop/productList',
+const products = Product.fetchAll()
+        .then(([rows, fieldData]) =>{
+            res.render('shop/productList',
             {
-                prods: products,
+                prods: rows,
                 docTitle: 'All Products',
                 path: '/productList',
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
             });
-    });
+        })
+        .catch(err => console.log(err));
 };
 
 exports.displayAllProductInCart = (req, res, next) => {
 
     Cart.fetchAll((cart) => {
+        
         Product.fetchAll(products => {
             const cartProducts =[];
 
@@ -90,19 +92,20 @@ exports.displayAllProductInCart = (req, res, next) => {
         });
     }
 
-
     exports.getIndex = (req, res, next) => {
-        const products = Product.fetchAll((products) => {
-            res.render('shop/index',
+        const products = Product.fetchAll()
+        .then(([rows, fieldData]) =>{
+             res.render('shop/index',
                 {
-                    prods: products,
+                    prods: rows,
                     docTitle: 'Main Page',
                     path: '/',
-                    hasProducts: products.length > 0,
+                    hasProducts: rows.length > 0,
                     activeShop: true,
                     productCSS: true
                 });
-        });
+        })
+        .catch(err => console.log(err));
     }
 
     exports.getMyOrders = (req, res, next) => {

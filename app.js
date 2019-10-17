@@ -3,21 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const errorsController = require('./controllers/errors');
-const db = require('./util/database');
+
 
 const login = require('./routes/login');
 const about = require('./routes/about');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-
-// db.execute('SELECT * FROM product;')
-//   .then( result => {
-//     console.log(result[0])
-//   })
-//   .catch(err=>
-//     {console.log(err)
-//     });
-
 
 const app = express();
 

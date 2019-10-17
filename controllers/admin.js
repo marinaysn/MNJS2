@@ -63,14 +63,21 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.displayAllProduct = (req, res, next) => {
 
-    Product.fetchAll((products) => {
+    Product.fetchAll()
+    .then(([rows, fieldData]) =>{
         res.render('admin/listOfProducts',
             {
-                prods: products,
+                prods: rows,
                 docTitle: 'All Products in the Cart',
                 path: '/admin/listOfProducts'
             });
-    });
+
+    })
+    .catch( err => console.log(err))
+
+
+        
+    
 };
 
 
