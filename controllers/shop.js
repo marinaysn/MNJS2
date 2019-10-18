@@ -1,6 +1,8 @@
 //const products = []; //use Model instead
 const Product = require('../models/product');
 const Cart = require('../models/cart');
+const User = require('../models/user');
+const CartItem = require('../models/cartItem');
 
 //getProducts
 exports.getMyCartView = (req, res, next) => {
@@ -51,33 +53,34 @@ exports.displayProduct = (req, res, next) => {
     }).catch(err => console.log(err))
 };
 
-exports.displayAllProductInCart = (req, res, next) => {
+//getCart
+exports.getCart = (req, res, next) => {
 
-    Cart.fetchAll((cart) => {
+    req.user
+        .getShoppingCart().then( cart =>{
+      //  console.log(cart)
+      let totalCost = 0.00
 
-        Product.fetchAll(products => {
-            const cartProducts = [];
+if (cart.totalCost) {
+    totalCost = cart.totalCost
+}
+totalCost = totalCost.toFixed(2)
 
-            for (product of products) {
-
-                const cartProdData = cart.products.find(prod => prod.id === product.id);
-                if (cartProdData) {
-                    cartProducts.push({ productData: product, qty: cartProdData.qty });
-                }
-            }
-            // //use this for HANDLEBARS and EJS template (uncomment)
+        return cart.getProducts()
+        .then(products =>{
             res.render('shop/cart',
-                {
-                    docTitle: 'All Products',
-                    path: '/cart',
-                    prods: cartProducts,
-                    cost: cart.totalCost.toFixed(2)
-                });
-
-        });
+                        {
+                            docTitle: 'All Products',
+                            path: '/cart',
+                            prods: products,
+                            cost: cart.totalCost.toFixed(2)
+                        }); 
+        })
+        .catch(err =>console.log(err));
     });
 };
 
+//getProduct
 exports.getProductByID = (req, res, next) => {
     const productId = req.params.productId;
 
@@ -104,9 +107,8 @@ exports.getIndex = (req, res, next) => {
                 prods: products,
                 docTitle: 'Main Page',
                 path: '/',
-                hasProducts: products.length > 0,
-                activeShop: true,
-                productCSS: true
+                hasProducts: products.length > 0
+                
             });
     })
         .catch(err => console.log(err))

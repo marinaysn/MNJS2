@@ -6,7 +6,7 @@ router.get('/', shopController.getIndex);
 
 router.get('/productList', shopController.displayProduct);
 
-router.get('/cart', shopController.displayAllProductInCart);
+router.get('/cart', shopController.getCart);
 
 router.post('/cart', shopController.postToCart);
 
