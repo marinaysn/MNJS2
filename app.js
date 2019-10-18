@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const errorsController = require('./controllers/errors');
-
+const sequelize = require('./util/database');
 
 const login = require('./routes/login');
 const about = require('./routes/about');
@@ -29,5 +29,12 @@ app.use(shopRoutes);
 app.use(
   errorsController.get404error
 );
+
+sequelize
+.sync()
+.then( result =>{
+ // console.log(result)
+})
+.catch(err => console.log(err))
 
 app.listen(3000);
