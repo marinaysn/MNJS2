@@ -13,7 +13,9 @@ exports.getEditProduct = (req, res, next) => {
     }
   
     const prodId = req.params.productId;
-    Product.findById(prodId, product =>{
+
+
+    Product.findByPk(prodId).then(product =>{
 
         if (!product) {
             return res.redirect('/')
@@ -34,11 +36,34 @@ exports.postEditProduct  = (req, res, next) =>{
    const updatedDesc = req.body.description;
    const prodId =  req.body.productId;
 
-//    console.log(updatedTitle)
-   const updatedProd = new Product(updatedTitle, updatedUrl, updatedDesc, updatedPrice, prodId);
+   //method 1
+  return Product.update({
+    title: updatedTitle,
+    imageUrl: updatedUrl,
+    price: updatedPrice,
+    description: updatedDesc
+   },
+   {
+       where : {
+           id: prodId
+       }
+   }).then( result =>{
+        res.redirect('/admin/listOfProducts')}
+   ).catch(err => console.log(err));
 
-   updatedProd.save();
-   res.redirect('/admin/listOfProducts')
+//     //method 2
+
+//     Product.findByPk(prodId)
+//     .then( product =>{
+//         product.title = updatedTitle;
+//         product.imageUrl = updatedUrl;
+//         product.price = updatedPrice;
+//         product.description = updatedDesc;
+
+//         return product.save();
+//     }).then( result =>{
+//         res.redirect('/admin/listOfProducts')}
+//    ).catch(err => console.log(err));
 }
 
 exports.postDeletedProduct = (req, res, next) => {
@@ -56,30 +81,29 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product(title, imgUrl, desc, price, null);
-    
-    product.save()
-    .then(()=>{
+    Product.create({
+        title: title,
+        imageUrl: imgUrl,
+        description: desc,
+        price: price
+    }).then(result => {
+        console.log("Row inserted")
         res.redirect('/')
-    })
-    .catch(err => console.log(err));
-    
+    }).catch(err=> console.log(err))
+  
 }
 
 exports.displayAllProduct = (req, res, next) => {
 
-    Product.fetchAll()
-    .then(([rows, fieldData]) =>{
+    Product.findAll().then(products => {
         res.render('admin/listOfProducts',
             {
-                prods: rows,
+                prods: products,
                 docTitle: 'All Products in the Cart',
                 path: '/admin/listOfProducts'
             });
-
-    })
-    .catch( err => console.log(err))
-   
+})
+.catch(err => console.log(err))
 };
 
 
