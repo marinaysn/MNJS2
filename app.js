@@ -62,11 +62,12 @@ return User.findByPk(1)
   return user;
 })
 .then(user =>{
-   return user.createShoppingCart()  
+
+      return user.createShoppingCart()  
+  
 })
 .then(cart =>{
   app.listen(3000);
 })
 .catch(err => console.log(err))
 
- 

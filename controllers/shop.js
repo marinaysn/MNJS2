@@ -20,7 +20,7 @@ exports.getMyCartView = (req, res, next) => {
     })
         .catch(err => console.log(err))
 
-    
+
 };
 
 exports.getMyCart = (req, res, next) => {
@@ -29,11 +29,47 @@ exports.getMyCart = (req, res, next) => {
 
 exports.postToCart = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.findById(prodId, (myProduct) => {
-        Cart.addProduct(prodId, myProduct.price);
-    });
-    console.log(prodId);
-    res.redirect('/cart')
+    let innerCart;
+    let newQty = 1;
+
+    req.user
+        .getShoppingCart().then(cart => {
+            innerCart = cart;
+            return cart.getProducts({ where: { id: prodId } })
+        }).then(products => {
+
+            let product;
+            if (products.length > 0) {
+                product = products[0];
+            }
+
+            if (product) {
+                //... add product to the card if it exists
+                const oldQty = product.cartItem.quantity;
+                newQty = newQty + oldQty;
+                // return product;
+            }
+            return Product.findByPk(prodId)
+                .then(product => {
+
+                    let newTotal = innerCart.totalCost + product.price;
+
+                    Cart.update({
+                        totalCost: newTotal
+                    },
+                        {
+                            where: {
+                                id: innerCart.id
+                            }
+                        })
+
+                    return innerCart.addProduct(product, { through: { quantity: newQty } });
+                })
+                .catch(err => console.log(err));
+        }).then(() => {
+            res.redirect('/cart')
+        })
+        .catch(err => console.log(err))
 }
 
 exports.getCheckOut = (req, res, next) => {
@@ -57,35 +93,32 @@ exports.displayProduct = (req, res, next) => {
 exports.getCart = (req, res, next) => {
 
     req.user
-        .getShoppingCart().then( cart =>{
-      //  console.log(cart)
-      let totalCost = 0.00
+        .getShoppingCart().then(cart => {
+            let totalCost = 0.00
 
-if (cart.totalCost) {
-    totalCost = cart.totalCost
-}
-totalCost = totalCost.toFixed(2)
+            if (cart.totalCost) {
+                totalCost = cart.totalCost
+            }
+            totalCost = totalCost.toFixed(2)
 
-        return cart.getProducts()
-        .then(products =>{
-            res.render('shop/cart',
+            return cart.getProducts()
+                .then(products => {
+                    res.render('shop/cart',
                         {
                             docTitle: 'All Products',
                             path: '/cart',
                             prods: products,
                             cost: cart.totalCost.toFixed(2)
-                        }); 
-        })
-        .catch(err =>console.log(err));
-    });
+                        });
+                })
+                .catch(err => console.log(err));
+        });
 };
 
 //getProduct
 exports.getProductByID = (req, res, next) => {
     const productId = req.params.productId;
 
-
-    // console.log(productId)
     Product.findByPk(productId)
         .then((product) => {
             res.render('shop/productDetails',
@@ -108,7 +141,7 @@ exports.getIndex = (req, res, next) => {
                 docTitle: 'Main Page',
                 path: '/',
                 hasProducts: products.length > 0
-                
+
             });
     })
         .catch(err => console.log(err))
@@ -121,13 +154,38 @@ exports.getMyOrders = (req, res, next) => {
 
 exports.postcartDeleteItem = (req, res, next) => {
     const prodId = req.body.productId;
-    const prodPrice = req.body.productIdPrice;
-    // console.log(prodPrice)
-    // console.log(prodId)
-    Product.findById(prodId, product => {
-        Cart.deleteProduct(prodId, product.price);
+     const qty = req.body.productQty;
+    let cartId = 0;
+    req.user.getShoppingCart()
+    .then( cart =>{
+ 
+         totalCost = cart.totalCost;
+         cartId = cart.id;
+        return cart.getProducts({where: { id: prodId}})
+    })
+    .then(products =>{
+        const product = products[0];
+        console.log('totalCost ' + totalCost)
+        console.log('qty ' + qty)
+        console.log('product.price ' + product.price)
+        
+        const total = totalCost - (qty * product.price);
+          
+        Cart.update({
+            totalCost: total,
+        },{
+                where: {
+                    id: cartId
+                }
+        })
+        
+        return product.cartItem.destroy();
+        
+    })
+    .then(result =>{
         res.redirect('/cart')
     })
+    .catch(err => console.log(err));
 
 }
 
