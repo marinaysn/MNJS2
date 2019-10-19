@@ -10,7 +10,7 @@ const OrderItem = sequelize.define('orderItem',{
         unique: true,
         primaryKey: true
     },
-    totalCost: {
+    quantity: {
        type: Sequelize.INTEGER,
        defaultValue: 0
     }

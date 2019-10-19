@@ -123,3 +123,11 @@ button:active {
   background: rgb(10, 42, 78);
   color: aliceblue;
 }
+
+.rightAl{
+ align-content: right;
+ text-align: right;
+ margin: 15px;
+ margin-left: 80%;
+ 
+}

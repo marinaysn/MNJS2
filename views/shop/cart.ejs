@@ -3,9 +3,9 @@
   <body>
     <%- include('../includes/navigation.ejs') %>
     
-  
-
-    <main>
+   <main>
+    
+      
       <h1>My Cart - Total Cost: $<%= cost %></h1>
       
 
@@ -26,6 +26,11 @@
 
       </ul>
 
+      <hr />
+      <form action="/checkout" method="POST" class="rightAl">
+     
+        <button class="btn editBtn" type="submit">Checkout</button>
+      </form>
 
      <% } else { %>
         <h1 >No Products in the Cart</h1>
