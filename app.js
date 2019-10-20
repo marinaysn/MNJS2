@@ -11,7 +11,7 @@ const mongoConnect = require('./util/database').mongoConnect;
 // const login = require('./routes/login');
 // const about = require('./routes/about');
  const adminRoutes = require('./routes/admin');
-// const shopRoutes = require('./routes/shop');
+ const shopRoutes = require('./routes/shop');
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.use((req, res, next) =>{
  app.use('/admin', adminRoutes);
 // app.use(login);
 // app.use(about);
-// app.use(shopRoutes);
+ app.use(shopRoutes);
 
 app.use(
   errorsController.get404error

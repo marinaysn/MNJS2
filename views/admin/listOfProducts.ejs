@@ -34,9 +34,9 @@
             <!-- <a href="/admin/editProduct/<%= p.id %>?edit=true" class="btn editBtn">Edit</a> -->
             
            <!-- <%- include('../includes/edit.ejs', {prod: p}) %> -->
-          <a href="/admin/editProduct/<%= p.id %>?edit=true" class="btn editBtn">Edit</a>
+          <a href="/admin/editProduct/<%= p._id %>?edit=true" class="btn editBtn">Edit</a>
            <form action="/admin/deleteProduct" method="POST">  
-            <input type="hidden" name="productId" value="<%= p.id %>">
+            <input type="hidden" name="productId" value="<%= p._id %>">
             <button class="btn">Delete</button>
            
         </form>

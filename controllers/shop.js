@@ -1,12 +1,12 @@
 //const products = []; //use Model instead
 const Product = require('../models/product');
-const Cart = require('../models/cart');
-const Order = require('../models/order');
+// const Cart = require('../models/cart');
+// const Order = require('../models/order');
 
 //getProducts
 exports.getMyCartView = (req, res, next) => {
 
-    Product.findAll().then(products => {
+    Product.fetchAll().then(products => {
         res.render('shop/cart',
             {
                 prods: products,
@@ -48,7 +48,7 @@ exports.postToCart = (req, res, next) => {
                 newQty = newQty + oldQty;
                 // return product;
             }
-            return Product.findByPk(prodId)
+            return Product.findById(prodId)
                 .then(product => {
 
                     let newTotal = innerCart.totalCost + product.price;
@@ -73,7 +73,7 @@ exports.postToCart = (req, res, next) => {
 
 exports.displayProduct = (req, res, next) => {
 
-    Product.findAll().then(products => {
+    Product.fetchAll().then(products => {
         res.render('shop/productList',
             {
                 prods: products,
@@ -114,7 +114,7 @@ exports.getCart = (req, res, next) => {
 exports.getProductByID = (req, res, next) => {
     const productId = req.params.productId;
 
-    Product.findByPk(productId)
+    Product.findById(productId)
         .then((product) => {
             res.render('shop/productDetails',
                 {
@@ -129,7 +129,7 @@ exports.getProductByID = (req, res, next) => {
 
 exports.getIndex = (req, res, next) => {
 
-    Product.findAll().then(products => {
+    Product.fetchAll().then(products => {
         res.render('shop/index',
             {
                 prods: products,
@@ -141,7 +141,6 @@ exports.getIndex = (req, res, next) => {
     })
         .catch(err => console.log(err))
 }
-
 
 exports.postcartDeleteItem = (req, res, next) => {
     const prodId = req.body.productId;
