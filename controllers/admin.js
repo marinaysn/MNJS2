@@ -15,7 +15,7 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product(title, price, desc, imgUrl);
+    const product = new Product(title, price, desc, imgUrl, null, req.user._id);
 
     product.save().then(result => {
         console.log("Row inserted")
@@ -59,7 +59,7 @@ exports.postEditProduct = (req, res, next) => {
     const prodId = req.body.productId;
 
 
-    const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedUrl, prodId);
+    const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedUrl, prodId, req.user._id);
     product.save()
         .then(result => {
             res.redirect('/admin/listOfProducts')

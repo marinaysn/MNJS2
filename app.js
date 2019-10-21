@@ -6,14 +6,15 @@ const errorsController = require('./controllers/errors');
 
 const mongoConnect = require('./util/database').mongoConnect;
 
-//models:
-const User = require('./models/user');
 
 //create routes:
 // const login = require('./routes/login');
 // const about = require('./routes/about');
  const adminRoutes = require('./routes/admin');
  const shopRoutes = require('./routes/shop');
+
+//models:
+const User = require('./models/user');
 
 const app = express();
 
@@ -27,11 +28,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) =>{
-  User.findUserById('5dac85ca71e8451bc4f01e0f').then(user =>{
-    req.user = user;
+  User.findUserById('5dacd92a78656a304c5af104')
+  .then(user => {
+    req.user = new User(user.fname, user.lname, user.email, user.cart, user._id);
     next();
   }).catch(err => console.log(err));
-  next();
+
 });
 
 
