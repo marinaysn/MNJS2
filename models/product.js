@@ -14,7 +14,6 @@ class Product {
         this.userId = userId;
     }
 
-
     save() {
         const db = getDb();
         let dbOp;

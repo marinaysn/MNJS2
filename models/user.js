@@ -2,81 +2,136 @@ const getDb = require('../util/database').getDb;
 const mongodb = require('mongodb');
 
 class User {
-    constructor(firstName, lastName, email, cart, id){
-       this.fname = firstName;
-       this.lname = lastName;
-       this.email = email;
-       this.cart = cart;
-       this.id = id;
+    constructor(firstName, lastName, email, cart, id) {
+        this.fname = firstName;
+        this.lname = lastName;
+        this.email = email;
+        this.cart = cart;
+        this.id = id;
     }
-    save(){
-       // const db = getDb();
+    save() {
+        // const db = getDb();
         return getDb().collection('user').insertOne(this)
-        .then( result =>{})
-        .catch(err => console.log(err));
+            .then(result => { })
+            .catch(err => console.log(err));
 
-    }
+    };
 
-    addToCart(product){
-        const cartProductIndex = this.cart.items.findIndex(cp =>{
-            
+    addToCart(product) {
+        const cartProductIndex = this.cart.items.findIndex(cp => {
+
             return cp.productId.toString() === product._id.toString();
         });
-    
+
         let newQty = 1;
         const updatedCartItems = [...this.cart.items];
 
-        if (cartProductIndex >= 0){
+        if (cartProductIndex >= 0) {
             newQty = this.cart.items[cartProductIndex].quantity + newQty;
             updatedCartItems[cartProductIndex].quantity = newQty
         }
         else {
-            updatedCartItems.push({productId: new mongodb.ObjectID(product._id), quantity: newQty})
+            updatedCartItems.push({ productId: new mongodb.ObjectID(product._id), quantity: newQty })
         }
-       
-        const updatedCart = { items: updatedCartItems}
+
+        const updatedCart = { items: updatedCartItems }
 
         return getDb().collection('user')
-        .updateOne({ _id : new mongodb.ObjectID(this.id)}, 
-            {$set: {cart: updatedCart}})
-            // .then()
-            // .catch( err => console.log(err));
-    }
+            .updateOne({ _id: new mongodb.ObjectID(this.id) },
+                { $set: { cart: updatedCart } })
+        // .then()
+        // .catch( err => console.log(err));
+    };
 
-    getCart(){
+    getCart() {
 
-        const productIds = this.cart.items.map(i => 
-            {return i.productId})
+        const productIds = this.cart.items.map(i => { return i.productId })
 
         return getDb().collection('product')
-        .find({_id: { $in: productIds}}).toArray()
-        .then( products =>
-            {
-            return products.map( p=>{
-                return {...p, quantity: this.cart.items.find(i=>{
-                    return i.productId.toString() === p._id.toString();
-                    }).quantity};
+            .find({ _id: { $in: productIds } }).toArray()
+            .then(products => {
+                return products.map(p => {
+                    return {
+                        ...p, quantity: this.cart.items.find(i => {
+                            return i.productId.toString() === p._id.toString();
+                        }).quantity
+                    };
                 })
             })
     };
 
-    deleteItemFromCart(prodId){
-        const updatedCartItems = this.cart.items.filter(item =>{
-            return  item.productId.toString() !== prodId.toString()
+    deleteItemFromCart(prodId) {
+        const updatedCartItems = this.cart.items.filter(item => {
+            return item.productId.toString() !== prodId.toString()
         });
 
         return getDb().collection('user')
-        .updateOne({ _id : new mongodb.ObjectID(this.id)}, 
-            {$set: {cart: {items: updatedCartItems}}})
+            .updateOne({ _id: new mongodb.ObjectID(this.id) },
+                { $set: { cart: { items: updatedCartItems } } })
 
     };
 
-    static findUserById(userId){
+    addOrder() {
+       return this.getCart().then(products => {
+            const order = {
+                items: products,
+                user: {
+                    _id: new mongodb.ObjectID(this.id),
+                    fname: this.fname,
+                    lname: this.lname,
+                    email: this.email
+                }
+            };
+           return getDb().collection('order').insertOne(order)
+        })
+        .then(result => {
+           this.cart = { items: [] };
+            return getDb().collection('user')
+            .updateOne({ _id: new mongodb.ObjectID(this.id) },
+                { $set: { cart: { items: [] } } })
+            });
+    };
+
+    getOrders() {
+
+        console.log(this.id);
+        const db = getDb();
+        return db.collection('order')
+        .find({'user._id': new mongodb.ObjectID(this.id)}).toArray().then( orders => {
+                
+                return Promise.all(
+                    orders.map(order => {
+   
+                      const orderedProductsIds = order.items.map(product => product._id );
+   
+                      return db.collection('product')
+                                .find({ _id: { $in: orderedProductsIds } })
+                                .toArray()
+                                .then(products => {
+                                  const orderedProducts = products.map(pr => {
+                                    pr.quantity = order.items.find(item => item._id.toString() === pr._id.toString()).quantity;
+                                    return pr;
+                                  });
+   
+                                  return {
+                                    ...order,
+                                    items: [ ...orderedProducts ]
+                                  }
+                                } )
+   
+                    })
+                  );
+            
+            
+            })
+    }
+
+    static findUserById(userId) {
 
         return getDb().collection('user')
-        .findOne({ _id: new mongodb.ObjectID(userId)})
-        .then(u =>{return u})
-        .catch(err=>console.log(err))
+            .findOne({ _id: new mongodb.ObjectID(userId) })
+            .then(u => { return u })
+            .catch(err => console.log(err))
     }
 
 }

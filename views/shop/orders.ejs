@@ -8,15 +8,14 @@
       <h1>My Orders:</h1>
       
       <% if (orders.length > 0) { %>
-      <ul>
+      <ul class="orders">
         <% orders.forEach( o => { %>
-
-          <li>
-            <h1># <%= o.id %> </h1>
-              <ul>
-                  <% o.products.forEach( p => { %>
-                    <li>
-                        <%= p.title %> - <%= p.orderItem.quantity %>
+          <li class="orders__item">
+            <h1>Order - # <%= o._id %> </h1>
+              <ul class="orders__products">
+                  <% o.items.forEach( p => { %>
+                    <li class="order__products-item">
+                        <%= p.title %> - <%= p.quantity %>
                     </li>
                   <% }) %>
               </ul>

@@ -113,58 +113,19 @@ exports.postCartDeleteItem = (req, res, next) => {
 
 //post Order
 exports.postOrder = (req, res, next) =>{
-  //  /checkout
 
-  let fetchCart;
-  let cartId;
-
-    req.user
-    .getShoppingCart()
-    .then(cart =>{
-        fetchCart = cart;
-        cartId = cart.id;
-        return cart.getProducts();
-    })
-    .then(products =>{
-      //  console.log(products)
-       return req.user.createOrder()
-       .then(order =>{
-           return order.addProducts(products.map(product =>{
-                // orderItem = this is a table name we defined from OrderItem model
-                product.orderItem ={
-                   quantity: product.cartItem.quantity
-                };
-                return product;
-            }))
-       })
-       .then(result =>{
-
-          return fetchCart.setProducts(null)
-       })
-       .then(result =>{
-           return Cart.update(
-               {totalCost: 0},{
-                   where: {
-                       id: cartId
-                   }
-               }
-           );
-       })
-       .then( result =>{
+    req.user.addOrder()
+    .then( result =>{
            res.redirect('/orders');
        })
-       .catch(err =>console.log(err))
-    })
     .catch(err => console.log(err))
 }
 
 // show Orders
 exports.getMyOrders = (req, res, next) => {
-    req.user.getOrders({include: ['products']})
+    req.user.getOrders()
         .then(orders =>{
 
-            console.log('11111111111111111111111')
-            console.log(orders)
             res.render('shop/orders', 
             {docTitle: 'My Orders', 
             path: '/orders', 
