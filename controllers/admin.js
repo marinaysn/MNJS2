@@ -1,12 +1,11 @@
 const Product = require('../models/product');
 
-
-//mongo
+//mongoose
 exports.getAddEditProduct = (req, res, next) => {
     // //use this for HANDLEBARS and EJS template (comment)
     res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false });
 }
-//mongo
+//mongoose
 exports.postAddProduct = (req, res, next) => {
     // products.push({title: req.body.title});
 
@@ -15,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product(title, price, desc, imgUrl, null, req.user._id);
+    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl});
 
     product.save().then(result => {
         console.log("Row inserted")
@@ -23,7 +22,7 @@ exports.postAddProduct = (req, res, next) => {
     }).catch(err => console.log(err))
 }
 
-//mongo
+//mongoose
 exports.getEditProduct = (req, res, next) => {
 
     const editMode = req.query.edit;
@@ -49,7 +48,7 @@ exports.getEditProduct = (req, res, next) => {
             });
         });
 }
-//mongo - mar
+//mongoose
 exports.postEditProduct = (req, res, next) => {
 
     const updatedTitle = req.body.title;
@@ -58,10 +57,15 @@ exports.postEditProduct = (req, res, next) => {
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
 
+    Product.findById(prodId)
+    .then(product => {
 
-    const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedUrl, prodId, req.user._id);
-    product.save()
-        .then(result => {
+        product.description = updatedDesc;
+        product.price = updatedPrice;
+        product.title = updatedTitle;
+        product.imageUrl = updatedUrl;
+        return product.save()
+    }).then(result => {
             res.redirect('/admin/listOfProducts')
         })
         .catch(err => console.log(err));
@@ -74,21 +78,21 @@ exports.postEditProduct = (req, res, next) => {
     //         res.redirect('/admin/listOfProducts')}
     //    ).catch(err => console.log(err));
 }
-//mongo
+//mongoose
 exports.postDeletedProduct = (req, res, next) => {
     const prodId = req.body.productId;
 
-    Product.deleteByID(prodId)
+    Product.deleteOne({_id: prodId})
         .then(result => {
             res.redirect('/admin/listOfProducts')
         }
         ).catch(err => console.log(err));
 };
 
-//mongo
+//mongoose
 exports.displayAllProduct = (req, res, next) => {
 
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render('admin/listOfProducts',
                 {
@@ -100,12 +104,12 @@ exports.displayAllProduct = (req, res, next) => {
         .catch(err => console.log(err))
 };
 
-//mongo
+//mongoose
 exports.getAdminProducts = (req, res, next) => {
     res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', activeDirection: true })
 }
 
-//mongo
+//mongoose
 exports.getCatalog = (req, res, next) => {
     res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', activeDirection: true })
 }

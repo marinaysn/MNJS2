@@ -1,9 +1,10 @@
 const Product = require('../models/product');
 // const Order = require('../models/order');
 
+//mongoose
 exports.displayProduct = (req, res, next) => {
 
-    Product.fetchAll().then(products => {
+    Product.find().then(products => {
         res.render('shop/productList',
             {
                 prods: products,
@@ -14,6 +15,7 @@ exports.displayProduct = (req, res, next) => {
     }).catch(err => console.log(err))
 };
 
+//mongoose
 //getProduct
 exports.getProductByID = (req, res, next) => {
     const productId = req.params.productId;
@@ -31,9 +33,10 @@ exports.getProductByID = (req, res, next) => {
         ).catch(err => console.log(err));
 }
 
+//mongoose
 exports.getIndex = (req, res, next) => {
 
-    Product.fetchAll().then(products => {
+    Product.find().then(products => {
         res.render('shop/index',
             {
                 prods: products,

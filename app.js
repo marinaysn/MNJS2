@@ -2,9 +2,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const errorsController = require('./controllers/errors');
+const mongoose = require('mongoose');
 
-const mongoConnect = require('./util/database').mongoConnect;
+const errorsController = require('./controllers/errors');
+const connectionString = require('./util/database')
 
 
 //create routes:
@@ -14,7 +15,7 @@ const mongoConnect = require('./util/database').mongoConnect;
  const shopRoutes = require('./routes/shop');
 
 //models:
-const User = require('./models/user');
+//const User = require('./models/user');
 
 const app = express();
 
@@ -27,15 +28,13 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) =>{
-  User.findUserById('5dacd92a78656a304c5af104')
-  .then(user => {
-    req.user = new User(user.fname, user.lname, user.email, user.cart, user._id);
-    next();
-  }).catch(err => console.log(err));
-
-});
-
+// app.use((req, res, next) =>{
+//   User.findUserById('5dacd92a78656a304c5af104')
+//   .then(user => {
+//     req.user = new User(user.fname, user.lname, user.email, user.cart, user._id);
+//     next();
+//   }).catch(err => console.log(err));
+// });
 
  app.use('/admin', adminRoutes);
 // app.use(login);
@@ -46,8 +45,9 @@ app.use(
   errorsController.get404error
 );
 
-mongoConnect(() => {
-
-    app.listen(3000);
-});
-
+mongoose
+  .connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => { 
+    console.log('Connected');
+     app.listen(3000); })
+  .catch(err => console.log(err));
