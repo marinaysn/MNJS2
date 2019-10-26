@@ -11,11 +11,11 @@ const connectionString = require('./util/database')
 //create routes:
 // const login = require('./routes/login');
 // const about = require('./routes/about');
- const adminRoutes = require('./routes/admin');
- const shopRoutes = require('./routes/shop');
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
 //models:
-//const User = require('./models/user');
+const User = require('./models/user');
 
 const app = express();
 
@@ -28,26 +28,38 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use((req, res, next) =>{
-//   User.findUserById('5dacd92a78656a304c5af104')
-//   .then(user => {
-//     req.user = new User(user.fname, user.lname, user.email, user.cart, user._id);
-//     next();
-//   }).catch(err => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById('5db4598de0d9d8505cafeab2')
+    .then(user => {
+      req.user = user;
+      next();
+    }).catch(err => console.log(err));
+});
 
- app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 // app.use(login);
 // app.use(about);
- app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use(
   errorsController.get404error
 );
 
 mongoose
-  .connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => { 
+  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(result => {
     console.log('Connected');
-     app.listen(3000); })
+    User.findOne().then(user => {
+      if (!user) {
+        const user = new User({
+          name: 'Marina',
+          email: 'marina@test.com',
+          cart: []
+        })
+        user.save();
+      }
+    })
+
+    app.listen(3000);
+  })
   .catch(err => console.log(err));

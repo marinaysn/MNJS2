@@ -14,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl});
+    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.user._id});
 
     product.save().then(result => {
         console.log("Row inserted")
@@ -93,6 +93,8 @@ exports.postDeletedProduct = (req, res, next) => {
 exports.displayAllProduct = (req, res, next) => {
 
     Product.find()
+    // .select('title price -_id')
+    // .populate('userId', 'name')
         .then(products => {
             res.render('admin/listOfProducts',
                 {
