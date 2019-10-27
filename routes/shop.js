@@ -14,7 +14,7 @@ const shopController = require('../controllers/shop');
 
  
 // //orders
-  router.get('/orders', shopController.getMyOrders);
+  //router.get('/orders', shopController.getMyOrders);
   router.post('/checkout', shopController.postOrder);
 
 // //delteing

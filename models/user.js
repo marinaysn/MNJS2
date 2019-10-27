@@ -23,6 +23,10 @@ const userSchema = new Schema({
                 required: true
             }
         }]
+    },
+    orderItems: {
+        type: Schema.Types.ObjectId,
+        ref: 'Order'
     }
 });
 
@@ -55,17 +59,21 @@ userSchema.methods.addToCart = function(product){
 userSchema.methods.getCart = function (){
 
     const productIds = this.cart.items.map(i => { return i.productId })
+    console.log('9999999')
+    console.log(productIds);
 
-    return this.find({ _id: { $in: productIds } }).toArray()
-        .then(products => {
-            return products.map(p => {
-                return {
-                    ...p, quantity: this.cart.items.find(i => {
-                        return i.productId.toString() === p._id.toString();
-                    }).quantity
-                };
-            })
+    return this.cart.find().where('_id').in(productIds).exec((err, products) => {
+        return products.map(p => {
+            return {
+                ...p, quantity: this.cart.items.find(i => {
+                    return i.productId.toString() === p._id.toString();
+                }).quantity
+            };
         })
+
+    });
+
+   
 };
 
 userSchema.methods.deleteItemFromCart  = function (productId) {
@@ -78,6 +86,46 @@ userSchema.methods.deleteItemFromCart  = function (productId) {
         return this.save();
 
     };
+
+userSchema.methods.clearCart = function() {
+
+    this.cart = {items: []}
+    return this.save();
+}
+
+        //     getOrders() {
+        
+        //         console.log(this.id);
+        //         const db = getDb();
+        //         return db.collection('order')
+        //         .find({'user._id': new mongodb.ObjectID(this.id)}).toArray().then( orders => {
+        
+        //                 return Promise.all(
+        //                     orders.map(order => {
+        
+        //                       const orderedProductsIds = order.items.map(product => product._id );
+        
+        //                       return db.collection('product')
+        //                                 .find({ _id: { $in: orderedProductsIds } })
+        //                                 .toArray()
+        //                                 .then(products => {
+        //                                   const orderedProducts = products.map(pr => {
+        //                                     pr.quantity = order.items.find(item => item._id.toString() === pr._id.toString()).quantity;
+        //                                     return pr;
+        //                                   });
+        
+        //                                   return {
+        //                                     ...order,
+        //                                     items: [ ...orderedProducts ]
+        //                                   }
+        //                                 } )
+        
+        //                     })
+        //                   );
+        
+        
+        //             })
+        //     }
 
 module.exports = mongoose.model('User', userSchema);
 
