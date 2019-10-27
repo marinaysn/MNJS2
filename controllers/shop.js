@@ -155,9 +155,11 @@ exports.postOrder = (req, res, next) => {
 
 // show Orders
 exports.getMyOrders = (req, res, next) => {
-    req.user.getOrders()
-        .then(orders => {
 
+    Order.find({'user.userId': req.user._id})
+    .then(orders => {
+
+        console.log(orders)
             res.render('shop/orders',
                 {
                     docTitle: 'My Orders',
