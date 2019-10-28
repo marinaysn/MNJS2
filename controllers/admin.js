@@ -3,7 +3,7 @@ const Product = require('../models/product');
 //mongoose
 exports.getAddEditProduct = (req, res, next) => {
     // //use this for HANDLEBARS and EJS template (comment)
-    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false });
+    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.isLoggedIn });
 }
 //mongoose
 exports.postAddProduct = (req, res, next) => {
@@ -45,6 +45,7 @@ exports.getEditProduct = (req, res, next) => {
                 path: 'admin/editProduct',
                 editing: editMode,
                 prod: product
+                , isLoggedIn: req.isLoggedIn 
             });
         });
 }
@@ -101,6 +102,7 @@ exports.displayAllProduct = (req, res, next) => {
                     prods: products,
                     docTitle: 'All Products in the Cart',
                     path: '/admin/listOfProducts'
+                    , isLoggedIn: req.isLoggedIn 
                 });
         })
         .catch(err => console.log(err))
@@ -108,12 +110,12 @@ exports.displayAllProduct = (req, res, next) => {
 
 //mongoose
 exports.getAdminProducts = (req, res, next) => {
-    res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', activeDirection: true })
+    res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', activeDirection: true, isLoggedIn: req.isLoggedIn  })
 }
 
 //mongoose
 exports.getCatalog = (req, res, next) => {
-    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', activeDirection: true })
+    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', activeDirection: true , isLoggedIn: req.isLoggedIn })
 }
 
 

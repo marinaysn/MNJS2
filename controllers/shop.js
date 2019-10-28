@@ -10,7 +10,8 @@ exports.displayProduct = (req, res, next) => {
                 prods: products,
                 docTitle: 'All Products',
                 path: '/productList',
-                hasProducts: products.length > 0,
+                hasProducts: products.length > 0
+                , isLoggedIn: req.isLoggedIn 
             });
     }).catch(err => console.log(err))
 };
@@ -28,6 +29,7 @@ exports.getProductByID = (req, res, next) => {
                     path: '/productDetails',
                     prod: product,
                     activeDirection: true
+                    , isLoggedIn: req.isLoggedIn 
                 })
         }
         ).catch(err => console.log(err));
@@ -43,7 +45,7 @@ exports.getIndex = (req, res, next) => {
                 docTitle: 'Main Page',
                 path: '/',
                 hasProducts: products.length > 0
-
+                , isLoggedIn: req.isLoggedIn 
             });
     })
         .catch(err => console.log(err))
@@ -61,6 +63,7 @@ exports.getMyCartView = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
+                , isLoggedIn: req.isLoggedIn 
             });
     })
         .catch(err => console.log(err))
@@ -69,7 +72,7 @@ exports.getMyCartView = (req, res, next) => {
 };
 
 exports.getMyCart = (req, res, next) => {
-    res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true })
+    res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true, isLoggedIn: req.isLoggedIn  })
 }
 
 exports.postToCart = (req, res, next) => {
@@ -100,6 +103,7 @@ exports.getCart = (req, res, next) => {
                     docTitle: 'All Products',
                     path: '/cart',
                     prods: products
+                    , isLoggedIn: req.isLoggedIn 
                 });
         })
         .catch(err => console.log(err));
