@@ -51,7 +51,6 @@ exports.getIndex = (req, res, next) => {
         .catch(err => console.log(err))
 }
 
-
 //getProducts
 exports.getMyCartView = (req, res, next) => {
 
