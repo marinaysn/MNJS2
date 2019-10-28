@@ -9,7 +9,7 @@ const connectionString = require('./util/database')
 
 
 //create routes:
-// const login = require('./routes/login');
+ const loginRoutes = require('./routes/login');
 // const about = require('./routes/about');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/admin', adminRoutes);
-// app.use(login);
+app.use(loginRoutes);
 // app.use(about);
 app.use(shopRoutes);
 

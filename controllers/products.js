@@ -27,6 +27,7 @@ exports.displayProduct = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
+                , isLoggedIn: req.isLoggedIn 
             });
     });
 };
@@ -45,24 +46,25 @@ exports.getMyCartView = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
+                , isLoggedIn: req.isLoggedIn 
             });
     });
 };
 
 exports.getMyCart = (req, res, next) =>{
-    res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true })
+    res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true , isLoggedIn: req.isLoggedIn })
 }
 
 exports.getCatalog = (req, res, next) =>{
-    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/listOfProducts', activeDirection: true })
+    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/listOfProducts', activeDirection: true, isLoggedIn: req.isLoggedIn  })
 }
 
 exports.getAdminProducts = (req, res, next) =>{
-    res.render('admin/adminProducts', { docTitle: 'List Of Products', path: '/adminProducts', activeDirection: true })
+    res.render('admin/adminProducts', { docTitle: 'List Of Products', path: '/adminProducts', activeDirection: true, isLoggedIn: req.isLoggedIn  })
 }
 
 exports.getCheckOut = (req, res, next) =>{
-    res.render('admin/checkout', { docTitle: 'Checkout', path: '/checkout', activeDirection: true })
+    res.render('admin/checkout', { docTitle: 'Checkout', path: '/checkout', activeDirection: true, isLoggedIn: req.isLoggedIn  })
 }
 
 
