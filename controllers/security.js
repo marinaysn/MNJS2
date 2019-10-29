@@ -12,6 +12,6 @@ exports.getLogInController = (req, res, next) =>{
 exports.postLogInController = (req, res, next) =>{
 
    // req.isLoggedIn = true;
-   res.setHeader('Set-Cookie', 'loggedIn=true')
+   res.setHeader('Set-Cookie', 'loggedIn=true; Max-Age:10')
     res.redirect('/');
 }
