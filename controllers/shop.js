@@ -11,7 +11,7 @@ exports.displayProduct = (req, res, next) => {
                 docTitle: 'All Products',
                 path: '/productList',
                 hasProducts: products.length > 0
-                , isLoggedIn: req.isLoggedIn 
+                , isLoggedIn: req.session.user ? true : false
             });
     }).catch(err => console.log(err))
 };
@@ -30,7 +30,7 @@ exports.getProductByID = (req, res, next) => {
                     path: '/productDetails',
                     prod: product,
                     activeDirection: true
-                    , isLoggedIn: req.isLoggedIn 
+                    , isLoggedIn: req.session.user ? true : false
                 })
         }
         ).catch(err => console.log(err));
@@ -38,8 +38,7 @@ exports.getProductByID = (req, res, next) => {
 
 //mongoose
 exports.getIndex = (req, res, next) => {
-// console.log('0000000000000000000')
- //    console.log(req.isLoggedIn)
+
     Product.find().then(products => {
         res.render('shop/index',
         
@@ -48,7 +47,7 @@ exports.getIndex = (req, res, next) => {
                 docTitle: 'Main Page',
                 path: '/',
                 hasProducts: products.length > 0
-                , isLoggedIn: req.isLoggedIn 
+                , isLoggedIn: req.session.user ? true : false
             });
     })
         .catch(err => console.log(err))
@@ -66,7 +65,7 @@ exports.getMyCartView = (req, res, next) => {
                 hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
-                , isLoggedIn: req.isLoggedIn 
+                , isLoggedIn: req.session.user ? true : false
             });
     })
         .catch(err => console.log(err))
@@ -75,17 +74,14 @@ exports.getMyCartView = (req, res, next) => {
 };
 
 exports.getMyCart = (req, res, next) => {
-    res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true, isLoggedIn: req.isLoggedIn  })
+    res.render('shop/cart', { docTitle: 'My Cart', path: '/cart', activeDirection: true, isLoggedIn: req.session.user ? true : false })
 }
 
 exports.postToCart = (req, res, next) => {
     const prodId = req.body.productId;
-
     Product.findById(prodId)
         .then(product => {
-
             return req.user.addToCart(product)
-
         })
         .then(result => {
             res.redirect('/cart')
@@ -100,13 +96,12 @@ exports.getCart = (req, res, next) => {
         .execPopulate()
         .then(user => {
             const products = user.cart.items
-            //  console.log(user.cart.items)
             res.render('shop/cart',
                 {
                     docTitle: 'All Products',
                     path: '/cart',
                     prods: products
-                    , isLoggedIn: req.isLoggedIn 
+                    , isLoggedIn: req.session.user ? true : false
                 });
         })
         .catch(err => console.log(err));
@@ -119,7 +114,7 @@ exports.postCartDeleteItem = (req, res, next) => {
 
     req.user.deleteItemFromCart(prodId)
         .then(result => {
-            //  console.log(result)
+
             res.redirect('/cart')
         })
         .catch(err => console.log(err));
@@ -134,12 +129,9 @@ exports.postOrder = (req, res, next) => {
         .execPopulate()
         .then(user => {
 
-          //  console.log(user.cart.items)
             const products = user.cart.items.map( i=> {
                 return {quantity: i.quantity, product: {...i.productId._doc} }
             });
-
-           // console.log(products);
 
             const order = new Order({
                 user: {
@@ -166,13 +158,12 @@ exports.getMyOrders = (req, res, next) => {
     Order.find({'user.userId': req.user._id})
     .then(orders => {
 
-       // console.log(orders)
             res.render('shop/orders',
                 {
                     docTitle: 'My Orders',
                     path: '/orders',
                     orders: orders
-                    , isLoggedIn: req.isLoggedIn 
+                    , isLoggedIn: req.session.user ? true : false
                 })
         })
         .catch(err => console.log(err))

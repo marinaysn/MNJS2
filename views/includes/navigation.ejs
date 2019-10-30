@@ -23,9 +23,6 @@
       >
         <a href="/admin/listOfProducts">Admin Product</a>
       </li>
-      <% } %>
-      <!-- end admin related -->
-
 
       <!-- user related -->
       <li class="main-header-li <%= path === '/cart' ? 'active' : '' %>">
@@ -35,15 +32,29 @@
       <li class="main-header-li <%= path === '/orders' ? 'active' : '' %>">
         <a href="/orders">My Orders</a>
       </li>
+
+      <% } %>
+      <!-- end admin related -->
       <!-- end user related -->
 
 
       <!-- <li class="main-header-li <%= path === '/about' ? 'active' : '' %>"><a href="/about">About Us</a></li>
         <li class="main-header-li <%= path === '/direction' ? 'active' : '' %>"><a href="/direction">Direction</a></li> -->
 
+        <% if (!isLoggedIn) { %>   
       <li class="main-header-li <%= path === '/login' ? 'active' : '' %>">
         <a href="/login">LogIn</a>
       </li>
+      <% } else { %>
+      <li class="main-header-li">
+        <form action="/logout" method="post">
+          <button type="submit">LogOut</button>
+        </form>
+
+      </li>
+
+      <% } %>
+
     </ul>
   </nav>
 </header>
