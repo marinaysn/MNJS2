@@ -27,8 +27,10 @@
             </p>
           </div>
           <div class="card__actions">
-            
-          <%- include('../includes/addToCart.ejs') %>
+            <% if (isLoggedIn) { %>  
+                <%- include('../includes/addToCart.ejs') %>
+
+            <% }%>
           </div>
         </article>
       </div>

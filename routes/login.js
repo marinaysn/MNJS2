@@ -4,8 +4,12 @@ const logIncontroller = require('../controllers/security');
 
 routes.get('/login', logIncontroller.getLogInController);
 
- //add Products
+ //LogIn
  routes.post('/login', logIncontroller.postLogInController);
+
+  //LogOut
+  routes.post('/logout', logIncontroller.postLogOut);
+
 
 module.exports = routes;
 

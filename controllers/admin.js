@@ -3,7 +3,7 @@ const Product = require('../models/product');
 //mongoose
 exports.getAddEditProduct = (req, res, next) => {
     // //use this for HANDLEBARS and EJS template (comment)
-    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.isLoggedIn });
+    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false });
 }
 //mongoose
 exports.postAddProduct = (req, res, next) => {
@@ -14,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.user._id });
+    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.session.user._id });
 
     product.save().then(result => {
         console.log("Row inserted")
@@ -26,8 +26,6 @@ exports.postAddProduct = (req, res, next) => {
 exports.getEditProduct = (req, res, next) => {
 
     const editMode = req.query.edit;
-
-    console.log(editMode);
 
     if (editMode !== "true") {
         return res.redirect('/');
@@ -45,7 +43,7 @@ exports.getEditProduct = (req, res, next) => {
                 path: 'admin/editProduct',
                 editing: editMode,
                 prod: product
-                , isLoggedIn: req.isLoggedIn
+                , isLoggedIn: req.session.user ? true : false
             });
         });
 }
@@ -57,6 +55,7 @@ exports.postEditProduct = (req, res, next) => {
     const updatedPrice = req.body.price;
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
+    const userId = req.user._id
 
     Product.findById(prodId)
     .then(product => {
@@ -65,19 +64,14 @@ exports.postEditProduct = (req, res, next) => {
         product.price = updatedPrice;
         product.title = updatedTitle;
         product.imageUrl = updatedUrl;
+        product.userId  = userId;
+        
         return product.save()
     }).then(result => {
             res.redirect('/admin/listOfProducts')
         })
         .catch(err => console.log(err));
 
-    //method 2 - mar
-    //     Product.findById(prodId)
-    //     .then( productData =>{
-    //         return Product.updateOneItem(prodId, updatedTitle, updatedPrice, updatedDesc, updatedUrl);
-    //     }).then( result =>{
-    //         res.redirect('/admin/listOfProducts')}
-    //    ).catch(err => console.log(err));
 }
 //mongoose
 exports.postDeletedProduct = (req, res, next) => {
@@ -102,7 +96,7 @@ exports.displayAllProduct = (req, res, next) => {
                     prods: products,
                     docTitle: 'All Products in the Cart',
                     path: '/admin/listOfProducts'
-                    , isLoggedIn: req.isLoggedIn
+                    , isLoggedIn: req.session.user ? true : false
                 });
         })
         .catch(err => console.log(err))
@@ -110,12 +104,12 @@ exports.displayAllProduct = (req, res, next) => {
 
 //mongoose
 exports.getAdminProducts = (req, res, next) => {
-    res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', isLoggedIn: req.isLoggedIn  })
+    res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', isLoggedIn: req.session.user ? true : false })
 }
 
 //mongoose
 exports.getCatalog = (req, res, next) => {
-    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', isLoggedIn: req.isLoggedIn })
+    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', isLoggedIn: req.session.user ? true : false })
 }
 
 
