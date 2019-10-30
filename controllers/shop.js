@@ -38,8 +38,8 @@ exports.getProductByID = (req, res, next) => {
 
 //mongoose
 exports.getIndex = (req, res, next) => {
- console.log('0000000000000000000')
-     console.log(req.isLoggedIn)
+// console.log('0000000000000000000')
+ //    console.log(req.isLoggedIn)
     Product.find().then(products => {
         res.render('shop/index',
         
