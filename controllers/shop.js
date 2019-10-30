@@ -23,6 +23,7 @@ exports.getProductByID = (req, res, next) => {
 
     Product.findById(productId)
         .then((product) => {
+
             res.render('shop/productDetails',
                 {
                     docTitle: product.title,
@@ -37,9 +38,11 @@ exports.getProductByID = (req, res, next) => {
 
 //mongoose
 exports.getIndex = (req, res, next) => {
-
+// console.log('0000000000000000000')
+ //    console.log(req.isLoggedIn)
     Product.find().then(products => {
         res.render('shop/index',
+        
             {
                 prods: products,
                 docTitle: 'Main Page',
@@ -163,12 +166,13 @@ exports.getMyOrders = (req, res, next) => {
     Order.find({'user.userId': req.user._id})
     .then(orders => {
 
-        console.log(orders)
+       // console.log(orders)
             res.render('shop/orders',
                 {
                     docTitle: 'My Orders',
                     path: '/orders',
                     orders: orders
+                    , isLoggedIn: req.isLoggedIn 
                 })
         })
         .catch(err => console.log(err))

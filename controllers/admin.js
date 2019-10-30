@@ -14,7 +14,7 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.user._id});
+    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.user._id });
 
     product.save().then(result => {
         console.log("Row inserted")
@@ -45,7 +45,7 @@ exports.getEditProduct = (req, res, next) => {
                 path: 'admin/editProduct',
                 editing: editMode,
                 prod: product
-                , isLoggedIn: req.isLoggedIn 
+                , isLoggedIn: req.isLoggedIn
             });
         });
 }
@@ -102,7 +102,7 @@ exports.displayAllProduct = (req, res, next) => {
                     prods: products,
                     docTitle: 'All Products in the Cart',
                     path: '/admin/listOfProducts'
-                    , isLoggedIn: req.isLoggedIn 
+                    , isLoggedIn: req.isLoggedIn
                 });
         })
         .catch(err => console.log(err))
@@ -110,12 +110,12 @@ exports.displayAllProduct = (req, res, next) => {
 
 //mongoose
 exports.getAdminProducts = (req, res, next) => {
-    res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', activeDirection: true, isLoggedIn: req.isLoggedIn  })
+    res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', isLoggedIn: req.isLoggedIn  })
 }
 
 //mongoose
 exports.getCatalog = (req, res, next) => {
-    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', activeDirection: true , isLoggedIn: req.isLoggedIn })
+    res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', isLoggedIn: req.isLoggedIn })
 }
 
 

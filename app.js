@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const errorsController = require('./controllers/errors');
 const connectionString = require('./util/database')
@@ -19,6 +21,11 @@ const User = require('./models/user');
 
 const app = express();
 
+const store = new MongoDBStore({
+  uri: connectionString,
+  collection: 'sessions'
+});
+
 // ****** EJS Template Engine ******** //
 app.set('view engine', 'ejs');
 // set where templates are
@@ -27,6 +34,7 @@ app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({secret: 'mySecretValue', resave: false, saveUninitialized: false, store: store}));
 
 app.use((req, res, next) => {
   User.findById('5db484b1468d6149349922a6')
