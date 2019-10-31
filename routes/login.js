@@ -10,6 +10,8 @@ routes.get('/login', logIncontroller.getLogInController);
   //LogOut
   routes.post('/logout', logIncontroller.postLogOut);
 
+  routes.get('/signup', logIncontroller.getSignUp);
+  routes.post('/signup', logIncontroller.postSignUp);
 
 module.exports = routes;
 
