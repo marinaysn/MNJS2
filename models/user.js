@@ -11,6 +11,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     cart: {
         items: [{
             productId: {
@@ -59,8 +63,6 @@ userSchema.methods.addToCart = function(product){
 userSchema.methods.getCart = function (){
 
     const productIds = this.cart.items.map(i => { return i.productId })
-    console.log('9999999')
-    console.log(productIds);
 
     return this.cart.find().where('_id').in(productIds).exec((err, products) => {
         return products.map(p => {

@@ -61,16 +61,18 @@ mongoose
   .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
     console.log('Connected');
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: 'Marina',
-          email: 'marina@test.com',
-          cart: []
-        })
-        user.save();
-      }
-    })
+    
+    // User.findOne().then(user => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: 'Marina',
+    //       email: 'marina@test.com',
+    //       password: 123,
+    //       cart: []
+    //     })
+    //     user.save();
+    //   }
+    // })
 
     app.listen(3000);
   })
