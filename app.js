@@ -5,7 +5,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-
+const csrf = require('csurf');
 const errorsController = require('./controllers/errors');
 const connectionString = require('./util/database')
 
@@ -26,6 +26,8 @@ const store = new MongoDBStore({
   collection: 'sessions'
 });
 
+const csrfProtection = csrf();
+
 // ****** EJS Template Engine ******** //
 app.set('view engine', 'ejs');
 // set where templates are
@@ -35,6 +37,8 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'mySecretValue', resave: false, saveUninitialized: false, store: store}));
+
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
 
