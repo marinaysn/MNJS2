@@ -2,12 +2,15 @@ const Product = require('../models/product');
 
 //mongoose
 exports.getAddEditProduct = (req, res, next) => {
+
+    // if (!req.session.isLoggedIn){
+    //    return res.redirect('/login');
+    // }
     // //use this for HANDLEBARS and EJS template (comment)
     res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false });
 }
 //mongoose
 exports.postAddProduct = (req, res, next) => {
-    // products.push({title: req.body.title});
 
     const title = req.body.title;
     const desc = req.body.description;
