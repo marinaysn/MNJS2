@@ -2,3 +2,4 @@ node_modules
 marinaTests
 other
 database.js
+nodemailerApiKeys.js

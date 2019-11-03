@@ -1,14 +1,25 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const nodemailerApiKey = require('../util/nodemailerApiKeys');
+
+//other approach
+// const nodemailer = require('nodemailer');
+// const sendGridTransport = require('nodemailer-sendgrid-transport');
+
+// const transporter = nodemailer.createTransport(sendGridTransport({
+//     auth: {
+//         api_key: nodemailerApiKey
+//     }
+// }));
 
 
 exports.getLogInController = (req, res, next) => {
 
     let msg = req.flash('error')
-    if (msg.length < 1){
-        msg = null 
+    if (msg.length < 1) {
+        msg = null
     }
-   
+
     res.render('auths/login', { docTitle: 'Sign In', path: 'auths/login', isLoggedIn: req.session.isLoggedIn ? true : false, errorMessage: msg })
 }
 
@@ -21,7 +32,7 @@ exports.postLogInController = (req, res, next) => {
         .then(user => {
 
             if (!user) {
-                req.flash('error', 'Invalid email or password')
+                req.flash('error', 'Invalid email')
                 return res.redirect('/login');
             }
 
@@ -30,11 +41,12 @@ exports.postLogInController = (req, res, next) => {
                     if (doMatch) {
                         req.session.isLoggedIn = true;
                         req.session.user = user;
-                        return req.session.save(err =>{
-                          res.redirect('/');
+                        return req.session.save(err => {
+                            res.redirect('/');
                         });
                     }
 
+                    req.flash('error', 'Invalid password')
                     res.redirect('/login');
 
                 }).catch(err => {
@@ -51,7 +63,6 @@ exports.postLogOut = (req, res, next) => {
         console.log(err)
         res.redirect('/')
     })
-
 }
 
 //signup user routine
@@ -60,14 +71,14 @@ exports.postSignUp = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
-    console.log('------------------')
-    console.log(email)
+    // console.log('------------------')
+    // console.log(email)
 
     User.findOne({ email: email })
         .then(userDoc => {
 
-            console.log(userDoc)
             if (userDoc) {
+                req.flash('error', 'Email already exists. Please log in')
                 return; //res.redirect('/login');
             }
 
@@ -81,7 +92,36 @@ exports.postSignUp = (req, res, next) => {
                 return user.save();
             })
         })
-        .then(result => res.redirect('/login'))
+        .then(result => {
+
+            console.log('------------------')
+            console.log(email)
+            //other approach
+            //    return transporter.sendMail({
+            //         from: 'marinaysn@gmail.com',
+            //         to: email,
+            //         subject: 'Email verification',
+            //         text: 'Hello world?', 
+            //         html: '<h1>You successfuly signed up!</h1>'
+            //     })    
+
+            const sgMail = require('@sendgrid/mail');
+            sgMail.setApiKey(nodemailerApiKey);
+            const msg = {
+                to: email,
+                from: 'marinaysn@gmail.com',
+                subject: 'Email verification',
+                text: 'Thank you for signing up with us', 
+                html: '<h1>You successfuly signed up!</h1>'
+            };
+            sgMail.send(msg);
+            return res.redirect('/login')
+
+        })
+        //other approach
+        // .then(result =>{
+        //     res.redirect('/login')
+        // })
         .catch(err => console.log(err));
 }
 
