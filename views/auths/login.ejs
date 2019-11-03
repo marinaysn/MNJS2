@@ -14,7 +14,8 @@
           <input type="text" name="email" />
           <label for="password">Password</label>
           <input type="password" name="password" id="password" />
-
+          
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button type="submit">LogIn</button>
           <button type="signin">Create New Account</button>
       

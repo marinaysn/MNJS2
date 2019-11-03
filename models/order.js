@@ -8,6 +8,10 @@ const orderSchema = new Schema({
             type: String,
             require: true
         },
+        email: {
+            type: String,
+            require: true
+        },
         userId: {
             type: Schema.Types.ObjectId,
             require: true
