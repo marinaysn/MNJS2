@@ -36,7 +36,9 @@
            <!-- <%- include('../includes/edit.ejs', {prod: p}) %> -->
           <a href="/admin/editProduct/<%= p._id %>?edit=true" class="btn editBtn">Edit</a>
            <form action="/admin/deleteProduct" method="POST">  
+            
             <input type="hidden" name="productId" value="<%= p._id %>">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn">Delete</button>
            
         </form>
