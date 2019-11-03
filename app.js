@@ -41,7 +41,6 @@ app.use(session({secret: 'mySecretValue', resave: false, saveUninitialized: fals
 app.use(csrfProtection);
 
 app.use((req, res, next) => {
-
   if (!req.session.user) {
    return next();
   }
