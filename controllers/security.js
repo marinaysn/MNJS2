@@ -3,7 +3,13 @@ const bcrypt = require('bcryptjs');
 
 
 exports.getLogInController = (req, res, next) => {
-    res.render('auths/login', { docTitle: 'Sign In', path: 'auths/login', isLoggedIn: req.session.isLoggedIn ? true : false })
+
+    let msg = req.flash('error')
+    if (msg.length < 1){
+        msg = null 
+    }
+   
+    res.render('auths/login', { docTitle: 'Sign In', path: 'auths/login', isLoggedIn: req.session.isLoggedIn ? true : false, errorMessage: msg })
 }
 
 exports.postLogInController = (req, res, next) => {
@@ -15,13 +21,13 @@ exports.postLogInController = (req, res, next) => {
         .then(user => {
 
             if (!user) {
+                req.flash('error', 'Invalid email or password')
                 return res.redirect('/login');
             }
 
             bcrypt.compare(password, user.password)
                 .then(doMatch => {
                     if (doMatch) {
-                        console.log('787878787')
                         req.session.isLoggedIn = true;
                         req.session.user = user;
                         return req.session.save(err =>{

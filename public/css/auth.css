@@ -5,3 +5,18 @@
     display: inline-block;
     
 }
+
+.user-message {
+   margin: 0;
+   padding: .5rem;
+   width: 90%;
+   border: 1px solid rgb(9, 34, 66);
+   border-radius: 3px;
+   background: rgb(183, 230, 245);
+   text-align: center;
+} 
+.user-message-error{
+    border: 1px solid rgb(121, 10, 6);
+    background: rgb(248, 233, 240);
+    text-align: center;
+}
