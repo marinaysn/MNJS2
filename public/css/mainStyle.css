@@ -112,7 +112,7 @@ main {
 
 button {
   font: inherit;
-  border: 1pz solid rgb(14, 4, 66);
+  border: 1px solid rgb(14, 4, 66);
   background: rgb(186, 228, 247);
   border-radius: 5px;
   padding: 8px;
@@ -131,3 +131,22 @@ button:active {
  margin-left: 80%;
  
 }
+
+
+.CreateNew {
+
+  display:inline-block; 
+  margin-top: 3px;
+  font: inherit;
+  border: 1px solid rgb(14, 4, 66);
+  background: rgb(186, 228, 247);
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+.CreateNew:hover,
+.CreateNew:active {
+  background: rgb(10, 42, 78);
+  color: aliceblue;
+}
+
