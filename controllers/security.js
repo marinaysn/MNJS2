@@ -132,3 +132,16 @@ exports.getSignUp = (req, res, next) => {
         docTitle: 'SignUp'
     })
 }
+
+exports.getResetPassword = (req, res, next) =>{
+    let msg = req.flash('error')
+    if (msg.length < 1) {
+        msg = null
+    }
+    res.render('auths/reset', {
+        path: '/reset',
+        isLoggedIn: false,
+        docTitle: 'Reset Your Password',
+        errorMessage: msg
+    })
+}
