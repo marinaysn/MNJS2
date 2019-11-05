@@ -14,6 +14,8 @@ routes.get('/login', logIncontroller.getLogInController);
   routes.post('/signup', logIncontroller.postSignUp);
 
   routes.get('/reset', logIncontroller.getResetPassword);
+
+  routes.post('/reset', logIncontroller.postResetPassword);
   
 module.exports = routes;
 
