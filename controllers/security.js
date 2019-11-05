@@ -147,6 +147,7 @@ exports.getResetPassword = (req, res, next) =>{
     })
 }
 
+
 exports.postResetPassword = (req, res, next) =>{
     crypto.randomBytes(32, (err, buffer) =>{
         if (err) {
