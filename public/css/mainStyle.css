@@ -134,16 +134,17 @@ button:active {
 
 
 .CreateNew {
-
   display:inline-block; 
   margin-top: 3px;
   font: inherit;
   border: 1px solid rgb(14, 4, 66);
   background: rgb(186, 228, 247);
+  color: rgb(10, 15, 92);
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
 }
+
 .CreateNew:hover,
 .CreateNew:active {
   background: rgb(10, 42, 78);
