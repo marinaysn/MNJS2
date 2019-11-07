@@ -112,7 +112,7 @@ exports.postSignUp = (req, res, next) => {
                 to: email,
                 from: 'marinaysn@gmail.com',
                 subject: 'Email verification',
-                text: 'Thank you for signing up with us', 
+                text: 'Thank you for signing up with us',
                 html: '<h1>You successfuly signed up!</h1>'
             };
             sgMail.send(msg);
@@ -134,7 +134,7 @@ exports.getSignUp = (req, res, next) => {
     })
 }
 
-exports.getResetPassword = (req, res, next) =>{
+exports.getResetPassword = (req, res, next) => {
     let msg = req.flash('error')
     if (msg.length < 1) {
         msg = null
@@ -148,50 +148,109 @@ exports.getResetPassword = (req, res, next) =>{
 }
 
 
-exports.postResetPassword = (req, res, next) =>{
-    crypto.randomBytes(32, (err, buffer) =>{
+exports.postResetPassword = (req, res, next) => {
+    crypto.randomBytes(32, (err, buffer) => {
         if (err) {
             console.log(err);
             return res.redirect('/reset');
         }
 
         const token = buffer.toString('hex');
-        User.findOne({email: req.body.email})
-        .then(user =>{
-            if(!user){
-                console.log('111111111111')
-                req.flash('error', 'No user with this email found');
-                return res.redirect('/reset')
-            }
+        User.findOne({ email: req.body.email })
+            .then(user => {
+                if (!user) {
+                    console.log('111111111111')
+                    req.flash('error', 'No user with this email found');
+                    return res.redirect('/reset')
+                }
 
-            console.log('22222222222222')
-            user.resetToken = token;
-            user.resetTokenExpiration = Date.now() + 360000;
-            return user.save();
-        })
-        .then( result =>{
+                console.log('22222222222222')
+                user.resetToken = token;
+                user.resetTokenExpiration = Date.now() + 360000;
+                return user.save();
+            })
+            .then(result => {
 
-            console.log('33333333333333333')
-           // res.redirect('/login')
-            const sgMail = require('@sendgrid/mail');
-            sgMail.setApiKey(nodemailerApiKey);
-            const msg = {
-                to: req.body.email,
-                from: 'marinaysn@gmail.com',
-                subject: 'Password Reset',
-                text: 'Thank you for signing up with us', 
-                html: `
+                console.log('33333333333333333')
+                // res.redirect('/login')
+                const sgMail = require('@sendgrid/mail');
+                sgMail.setApiKey(nodemailerApiKey);
+                const msg = {
+                    to: req.body.email,
+                    from: 'marinaysn@gmail.com',
+                    subject: 'Password Reset',
+                    text: 'Thank you for signing up with us',
+                    html: `
                     <p> You requested a password reset</p>
                     <p>Click this <a href="http://localhost:3000/reset/${token}"> link </a> to set new password</p>
                 `
-            };
-            sgMail.send(msg);
-            return res.redirect('/login')
+                };
+                sgMail.send(msg);
+                return res.redirect('/login')
 
-        })
-        .catch(err =>{
-            console.log(err)
-        });
+            })
+            .catch(err => {
+                console.log(err)
+            });
     })
 
+}
+
+exports.getNewPassword = (req, res, next) => {
+
+    const token = req.params.token;
+
+    User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }).then(user => {
+
+        if (!user) {
+            return res.redirect('/')
+        }
+        let msg = req.flash('error')
+        if (msg.length < 1) {
+            msg = null
+        }
+        res.render('auths/passwordReset', {
+            path: '/passwordReset',
+            isLoggedIn: false,
+            docTitle: 'Reset Your Password',
+            errorMessage: msg,
+            userId: user._id.toString(),
+            pswToken: token
+        })
+    }
+    ).catch(err => console.log(err))
+}
+
+exports.postNewPassword = (req, res, next) =>{
+    const newPsw = req.body.newPassword;
+    const newPswConfirm = req.body.password2;
+    const userId = req.body.userId;
+    const pswToken = req.body.pswToken;
+    let resetUser;
+
+    if (newPsw !== newPswConfirm) {
+        console.log('111111111111')
+        req.flash('error', 'Passwords you entered do not match. Please try again');
+        return res.redirect(`/reset/${pswToken}`)
+    }
+
+    else {
+        User.findOne({ 
+            resetToken: pswToken, 
+            resetTokenExpiration: { $gt: Date.now() },
+            _id: userId }).then(user => {
+                resetUser = user;
+               return bcrypt.hash(newPsw, 12)
+        }).then(hashesPsw =>{
+            resetUser.password=hashesPsw;
+            resetUser.resetToken = undefined;
+            resetUser.resetTokenExpiration = undefined;
+            return resetUser.save();
+        }).then(result =>{
+            res.redirect('/login')
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
 }

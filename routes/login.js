@@ -16,6 +16,9 @@ routes.get('/login', logIncontroller.getLogInController);
   routes.get('/reset', logIncontroller.getResetPassword);
 
   routes.post('/reset', logIncontroller.postResetPassword);
+
+  routes.get('/reset/:token', logIncontroller.getNewPassword);
+  routes.post('/passwordReset', logIncontroller.postNewPassword);
   
 module.exports = routes;
 
