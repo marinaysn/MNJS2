@@ -2,7 +2,9 @@ const express = require('express');
 const routes = express.Router();
 const logIncontroller = require('../controllers/security');
 //const expValidator = require('express-validator/check');
-const { check,body } = require('express-validator');
+const { check, body } = require('express-validator');
+const User = require('../models/user');
+
 //LogIn
 routes.get('/login', logIncontroller.getLogInController);
 routes.post('/login', logIncontroller.postLogInController);
@@ -20,29 +22,36 @@ routes.post(
       .withMessage('Please Enter Valid Email')
       .custom((value, { req }) => {
 
-        console.log('------------------')
-        console.log(value)
+        // let regex = /tests.com/i;
+        // let result = regex.test(value);
+        // if (result) {
 
-        let regex = /tests.com/i;
-        let result = regex.test(value);
-        console.log(result);
+        //   throw new Error(`${value} Email Address is Reserved`)
+        // }
+        // return true;
 
-        if (result) {
+        return User.findOne({ email: value })
+          .then(userDoc => {
 
-          throw new Error(`${value} Email Address is Reserved`)
-        }
-        return true;
-      }),
+            if (userDoc) {
+              //throw 'Email Already Exists. Please choose different email or login'
+              return Promise.reject('Email already exists');
+            }
+          });
+      })
+    ,
+    body('password', 'Password should be at least 6 characters long and have only letters or numbers')
+      .isLength({ min: 5 })
+      .isAlphanumeric()  
+    ,
+    body('confirmPassword')
+      .custom((value, { req }) => {
 
-      body('password', 'Password should be at least 6 characters long and have only letters or numbers')
-      .isLength({min:5})
-      .isAlphanumeric(),
-
-      body('confirmPassword')
-      .custom((value, {req}) =>{
-        if(value !== req.body.password){
+        if (value.toString() !== req.body.password.toString()) {
           throw new Error('Passwords you entered do not match')
         }
+
+        return true;
       })
   ],
   logIncontroller.postSignUp);
