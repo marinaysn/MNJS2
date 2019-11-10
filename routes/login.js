@@ -1,24 +1,66 @@
 const express = require('express');
 const routes = express.Router();
 const logIncontroller = require('../controllers/security');
+//const expValidator = require('express-validator/check');
+const { check, body } = require('express-validator');
+const User = require('../models/user');
 
+//LogIn
 routes.get('/login', logIncontroller.getLogInController);
+routes.post('/login', logIncontroller.postLogInController);
 
- //LogIn
- routes.post('/login', logIncontroller.postLogInController);
+//LogOut
+routes.post('/logout', logIncontroller.postLogOut);
 
-  //LogOut
-  routes.post('/logout', logIncontroller.postLogOut);
+//signup
+routes.get('/signup', logIncontroller.getSignUp);
+routes.post(
+  '/signup',
+  [
+    check('email')
+      .isEmail()
+      .withMessage('Please Enter Valid Email')
+      .custom((value, { req }) => {
 
-  routes.get('/signup', logIncontroller.getSignUp);
-  routes.post('/signup', logIncontroller.postSignUp);
+        // let regex = /tests.com/i;
+        // let result = regex.test(value);
+        // if (result) {
 
-  routes.get('/reset', logIncontroller.getResetPassword);
+        //   throw new Error(`${value} Email Address is Reserved`)
+        // }
+        // return true;
 
-  routes.post('/reset', logIncontroller.postResetPassword);
+        return User.findOne({ email: value })
+          .then(userDoc => {
 
-  routes.get('/reset/:token', logIncontroller.getNewPassword);
-  routes.post('/passwordReset', logIncontroller.postNewPassword);
-  
+            if (userDoc) {
+              //throw 'Email Already Exists. Please choose different email or login'
+              return Promise.reject('Email already exists');
+            }
+          });
+      })
+    ,
+    body('password', 'Password should be at least 6 characters long and have only letters or numbers')
+      .isLength({ min: 5 })
+      .isAlphanumeric()  
+    ,
+    body('confirmPassword')
+      .custom((value, { req }) => {
+
+        if (value.toString() !== req.body.password.toString()) {
+          throw new Error('Passwords you entered do not match')
+        }
+
+        return true;
+      })
+  ],
+  logIncontroller.postSignUp);
+
+//reset
+routes.get('/reset', logIncontroller.getResetPassword);
+routes.post('/reset', logIncontroller.postResetPassword);
+routes.get('/reset/:token', logIncontroller.getNewPassword);
+routes.post('/passwordReset', logIncontroller.postNewPassword);
+
 module.exports = routes;
 

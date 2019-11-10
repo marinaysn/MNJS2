@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const nodemailerApiKey = require('../util/nodemailerApiKeys');
 const crypto = require('crypto');
+const {validationResult} = require('express-validator');
 
 //other approach
 // const nodemailer = require('nodemailer');
@@ -71,19 +72,28 @@ exports.postSignUp = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    const confirmPassword = req.body.confirmPassword;
-    // console.log('------------------')
-    // console.log(email)
+    const errors = validationResult(req);
+    //console.log('+++++++++++++++++++')
+    console.log(errors)
+    
+    if(!errors.isEmpty()){
+        return res.status(422).render('auths/signup', {
+            path: '/signup',
+            isLoggedIn: false,
+            docTitle: 'SignUp',
+            errorMessage: errors.array()[0].msg
+        });
+    }
 
-    User.findOne({ email: email })
-        .then(userDoc => {
+    // User.findOne({ email: email })
+    //     .then(userDoc => {
 
-            if (userDoc) {
-                req.flash('error', 'Email already exists. Please log in')
-                return; //res.redirect('/login');
-            }
+    //         if (userDoc) {
+    //             req.flash('error', 'Email already exists. Please log in')
+    //             return; //res.redirect('/login');
+    //         }
 
-            return bcrypt.hash(password, 12).then(hashedPwd => {
+        bcrypt.hash(password, 12).then(hashedPwd => {
                 const user = new User({
                     name: name,
                     email: email,
@@ -92,7 +102,7 @@ exports.postSignUp = (req, res, next) => {
                 })
                 return user.save();
             })
-        })
+       // })
         .then(result => {
 
             console.log('------------------')
@@ -127,10 +137,16 @@ exports.postSignUp = (req, res, next) => {
 }
 
 exports.getSignUp = (req, res, next) => {
+
+    let msg = req.flash('error')
+    if (msg.length < 1) {
+        msg = null
+    }
     res.render('auths/signup', {
         path: '/signup',
         isLoggedIn: false,
         docTitle: 'SignUp'
+        , errorMessage: msg
     })
 }
 
@@ -146,7 +162,6 @@ exports.getResetPassword = (req, res, next) => {
         errorMessage: msg
     })
 }
-
 
 exports.postResetPassword = (req, res, next) => {
     crypto.randomBytes(32, (err, buffer) => {
@@ -221,7 +236,7 @@ exports.getNewPassword = (req, res, next) => {
     ).catch(err => console.log(err))
 }
 
-exports.postNewPassword = (req, res, next) =>{
+exports.postNewPassword = (req, res, next) => {
     const newPsw = req.body.newPassword;
     const newPswConfirm = req.body.password2;
     const userId = req.body.userId;
@@ -235,22 +250,23 @@ exports.postNewPassword = (req, res, next) =>{
     }
 
     else {
-        User.findOne({ 
-            resetToken: pswToken, 
+        User.findOne({
+            resetToken: pswToken,
             resetTokenExpiration: { $gt: Date.now() },
-            _id: userId }).then(user => {
-                resetUser = user;
-               return bcrypt.hash(newPsw, 12)
-        }).then(hashesPsw =>{
-            resetUser.password=hashesPsw;
+            _id: userId
+        }).then(user => {
+            resetUser = user;
+            return bcrypt.hash(newPsw, 12)
+        }).then(hashesPsw => {
+            resetUser.password = hashesPsw;
             resetUser.resetToken = undefined;
             resetUser.resetTokenExpiration = undefined;
             return resetUser.save();
-        }).then(result =>{
+        }).then(result => {
             res.redirect('/login')
         })
-        .catch(err=>{
-            console.log(err)
-        })
+            .catch(err => {
+                console.log(err)
+            })
     }
 }
