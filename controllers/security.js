@@ -72,7 +72,6 @@ exports.postSignUp = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    const confirmPassword = req.body.confirmPassword;
     const errors = validationResult(req);
     
     if(!errors.isEmpty()){
@@ -83,7 +82,6 @@ exports.postSignUp = (req, res, next) => {
             errorMessage: errors.array()[0].msg
         });
     }
-
 
     User.findOne({ email: email })
         .then(userDoc => {
