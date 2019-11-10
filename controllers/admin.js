@@ -8,7 +8,7 @@ exports.getAddEditProduct = (req, res, next) => {
     // }
 
     // //use this for HANDLEBARS and EJS template (comment)
-    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false});
+    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false });
 }
 //mongoose
 exports.postAddProduct = (req, res, next) => {
@@ -18,7 +18,7 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
 
-    const product = new Product({title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.session.user._id });
+    const product = new Product({ title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.session.user._id });
 
     product.save().then(result => {
         console.log("Row inserted")
@@ -62,17 +62,20 @@ exports.postEditProduct = (req, res, next) => {
     const userId = req.user._id
 
     Product.findById(prodId)
-    .then(product => {
+        .then(product => {
+            
+            if (product.userId.toString() !== req.user._id.toString()) {
+                return res.redirect('/')
+            }
+            product.description = updatedDesc;
+            product.price = updatedPrice;
+            product.title = updatedTitle;
+            product.imageUrl = updatedUrl;
+            product.userId = userId;
 
-        product.description = updatedDesc;
-        product.price = updatedPrice;
-        product.title = updatedTitle;
-        product.imageUrl = updatedUrl;
-        product.userId  = userId;
-        
-        return product.save()
-    }).then(result => {
-            res.redirect('/admin/listOfProducts')
+            return product.save().then(result => {
+                res.redirect('/admin/listOfProducts')
+            })
         })
         .catch(err => console.log(err));
 
@@ -81,7 +84,7 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeletedProduct = (req, res, next) => {
     const prodId = req.body.productId;
 
-    Product.deleteOne({_id: prodId})
+    Product.deleteOne({ _id: prodId, userId: req.user._id })
         .then(result => {
             res.redirect('/admin/listOfProducts')
         }
@@ -91,9 +94,9 @@ exports.postDeletedProduct = (req, res, next) => {
 //mongoose
 exports.displayAllProduct = (req, res, next) => {
 
-    Product.find()
-    // .select('title price -_id')
-    // .populate('userId', 'name')
+    Product.find({ userId: req.user._id })
+        // .select('title price -_id')
+        // .populate('userId', 'name')
         .then(products => {
             res.render('admin/listOfProducts',
                 {
