@@ -30,13 +30,19 @@ exports.postLogInController = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        return res.status(422).render('auths/login', {
+            path: '/login',
+            isLoggedIn: false,
+            docTitle: 'Sign In',
+            errorMessage: errors.array()[0].msg
+        });
+    }
+
     User.findOne({ email: email })
         .then(user => {
-
-            if (!user) {
-                req.flash('error', 'Invalid email')
-                return res.redirect('/login');
-            }
 
             bcrypt.compare(password, user.password)
                 .then(doMatch => {

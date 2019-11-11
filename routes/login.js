@@ -4,10 +4,36 @@ const logIncontroller = require('../controllers/security');
 //const expValidator = require('express-validator/check');
 const { check, body } = require('express-validator');
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 //LogIn
 routes.get('/login', logIncontroller.getLogInController);
-routes.post('/login', logIncontroller.postLogInController);
+routes.post(
+  '/login',
+  [
+    check('email')
+      .isEmail()
+      .withMessage('Please Enter Valid Email')
+      .custom((value, { req }) => {
+
+        return User.findOne({ email: value })
+          .then(user => {
+
+            if (!user) {
+              
+              return Promise.reject('Invalid Email. Please check your email and try again');
+            }
+
+            return true;
+          })
+      })
+    ,
+    body('password', 'Password is Incorrect. Please try again')
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+      
+  ],
+  logIncontroller.postLogInController);
 
 //LogOut
 routes.post('/logout', logIncontroller.postLogOut);
@@ -42,7 +68,7 @@ routes.post(
     ,
     body('password', 'Password should be at least 6 characters long and have only letters or numbers')
       .isLength({ min: 5 })
-      .isAlphanumeric()  
+      .isAlphanumeric()
     ,
     body('confirmPassword')
       .custom((value, { req }) => {
