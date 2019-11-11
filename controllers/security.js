@@ -22,7 +22,8 @@ exports.getLogInController = (req, res, next) => {
         msg = null
     }
 
-    res.render('auths/login', { docTitle: 'Sign In', path: 'auths/login', isLoggedIn: req.session.isLoggedIn ? true : false, errorMessage: msg })
+    res.render('auths/login', { docTitle: 'Sign In', path: 'auths/login', isLoggedIn: req.session.isLoggedIn ? true : false, errorMessage: msg,
+    oldValues: {email: ''} })
 }
 
 exports.postLogInController = (req, res, next) => {
@@ -37,13 +38,13 @@ exports.postLogInController = (req, res, next) => {
             path: '/login',
             isLoggedIn: false,
             docTitle: 'Sign In',
-            errorMessage: errors.array()[0].msg
+            errorMessage: errors.array()[0].msg,
+            oldValues: {email: email}
         });
     }
 
     User.findOne({ email: email })
         .then(user => {
-
             bcrypt.compare(password, user.password)
                 .then(doMatch => {
                     if (doMatch) {
@@ -78,16 +79,19 @@ exports.postSignUp = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword
     const errors = validationResult(req);
-    //console.log('+++++++++++++++++++')
-    console.log(errors)
-    
+  
     if(!errors.isEmpty()){
         return res.status(422).render('auths/signup', {
             path: '/signup',
             isLoggedIn: false,
             docTitle: 'SignUp',
-            errorMessage: errors.array()[0].msg
+            errorMessage: errors.array()[0].msg,
+            oldValues: { 
+                name: name,
+                email: email
+                }
         });
     }
 
@@ -111,8 +115,6 @@ exports.postSignUp = (req, res, next) => {
        // })
         .then(result => {
 
-            console.log('------------------')
-            console.log(email)
             //other approach
             //    return transporter.sendMail({
             //         from: 'marinaysn@gmail.com',
@@ -152,7 +154,8 @@ exports.getSignUp = (req, res, next) => {
         path: '/signup',
         isLoggedIn: false,
         docTitle: 'SignUp'
-        , errorMessage: msg
+        , errorMessage: msg,
+        oldValues: {name: '', email: ''}
     })
 }
 
