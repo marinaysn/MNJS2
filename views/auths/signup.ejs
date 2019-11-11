@@ -13,12 +13,12 @@
 
         <form class="login-form" action="/signup" method="POST">
             <div class="form-control">
-                    <label for="name">Name</label>
-                    <input type="name" name="name" id="name">
-                </div>
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" value=" <%= oldValues.name %>">
+            </div> 
             <div class="form-control">
                 <label for="email">E-Mail</label>
-                <input type="email" name="email" id="email">
+                <input type="email" name="email" id="email"  value=" <%= oldValues.email %>">
             </div>
             <div class="form-control">
                 <label for="password">Password</label>
