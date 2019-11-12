@@ -23,7 +23,8 @@ exports.getLogInController = (req, res, next) => {
     }
 
     res.render('auths/login', { docTitle: 'Sign In', path: 'auths/login', isLoggedIn: req.session.isLoggedIn ? true : false, errorMessage: msg,
-    oldValues: {email: ''} })
+    oldValues: {email: ''},
+    validationErrors: [] })
 }
 
 exports.postLogInController = (req, res, next) => {
@@ -33,13 +34,17 @@ exports.postLogInController = (req, res, next) => {
 
     const errors = validationResult(req);
 
+    console.log('-------------')
+    console.log(errors)
     if(!errors.isEmpty()){
+        console.log(errors.array())
         return res.status(422).render('auths/login', {
             path: '/login',
             isLoggedIn: false,
             docTitle: 'Sign In',
             errorMessage: errors.array()[0].msg,
-            oldValues: {email: email}
+            oldValues: {email: email},
+            validationErrors: errors.array()
         });
     }
 
@@ -55,12 +60,25 @@ exports.postLogInController = (req, res, next) => {
                         });
                     }
 
-                    req.flash('error', 'Invalid password')
-                    res.redirect('/login');
+
+                    return res.status(422).render('auths/login', {
+                        path: '/login',
+                        isLoggedIn: false,
+                        docTitle: 'Sign In',
+                        errorMessage: 'Invalid password',
+                        oldValues: {email: email},
+                        validationErrors: [
+                            {
+                              param: 'password'
+                            }
+                          ]
+                    });
+
 
                 }).catch(err => {
                     console.log(err)
                     res.redirect('/login');
+                    
                 })
         })
         .catch(err => console.log(err));
@@ -83,6 +101,8 @@ exports.postSignUp = (req, res, next) => {
     const errors = validationResult(req);
   
     if(!errors.isEmpty()){
+        console.log(errors.array());
+
         return res.status(422).render('auths/signup', {
             path: '/signup',
             isLoggedIn: false,
@@ -91,17 +111,10 @@ exports.postSignUp = (req, res, next) => {
             oldValues: { 
                 name: name,
                 email: email
-                }
+                },
+                validationErrors: errors.array()
         });
     }
-
-    // User.findOne({ email: email })
-    //     .then(userDoc => {
-
-    //         if (userDoc) {
-    //             req.flash('error', 'Email already exists. Please log in')
-    //             return; //res.redirect('/login');
-    //         }
 
         bcrypt.hash(password, 12).then(hashedPwd => {
                 const user = new User({
@@ -112,7 +125,6 @@ exports.postSignUp = (req, res, next) => {
                 })
                 return user.save();
             })
-       // })
         .then(result => {
 
             //other approach
@@ -155,7 +167,9 @@ exports.getSignUp = (req, res, next) => {
         isLoggedIn: false,
         docTitle: 'SignUp'
         , errorMessage: msg,
-        oldValues: {name: '', email: ''}
+        oldValues: {name: '', email: ''},
+        validationErrors: []
+        
     })
 }
 
