@@ -50,12 +50,6 @@ exports.postLogInController = (req, res, next) => {
 
     User.findOne({ email: email })
         .then(user => {
-
-            // if (!user) {
-            //     req.flash('error', 'Invalid email')
-            //     return res.redirect('/login');
-            // }
-
             bcrypt.compare(password, user.password)
                 .then(doMatch => {
                     if (doMatch) {
@@ -66,8 +60,7 @@ exports.postLogInController = (req, res, next) => {
                         });
                     }
 
-                  //  req.flash('error', 'Invalid password')
-                   // res.redirect('/login');
+
                     return res.status(422).render('auths/login', {
                         path: '/login',
                         isLoggedIn: false,

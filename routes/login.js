@@ -14,6 +14,7 @@ routes.post(
     check('email')
       .isEmail()
       .withMessage('Please Enter Valid Email')
+      .normalizeEmail()
       .custom((value, { req }) => {
 
         return User.findOne({ email: value })
@@ -29,6 +30,7 @@ routes.post(
       })
     ,
     body('password', 'Password is Incorrect. Please try again')
+    .trim()
       .isLength({ min: 5 })
       .isAlphanumeric()
       
@@ -46,6 +48,7 @@ routes.post(
     check('email')
       .isEmail()
       .withMessage('Please Enter Valid Email')
+      .normalizeEmail()
       .custom((value, { req }) => {
 
         // let regex = /tests.com/i;
@@ -69,8 +72,10 @@ routes.post(
     body('password', 'Password should be at least 6 characters long and have only letters or numbers')
       .isLength({ min: 5 })
       .isAlphanumeric()
+        .trim()
     ,
     body('confirmPassword')
+    .trim()
       .custom((value, { req }) => {
 
         if (value.toString() !== req.body.password.toString()) {
