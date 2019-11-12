@@ -1,14 +1,19 @@
 const Product = require('../models/product');
+const {validationResult} = require('express-validator');
 
 //mongoose
 exports.getAddEditProduct = (req, res, next) => {
 
-    // if (!req.session.isLoggedIn){
-    //    return res.redirect('/login');
-    // }
+    let msg = req.flash('error')
+    if (msg.length < 1) {
+        msg = null
+    }
 
     // //use this for HANDLEBARS and EJS template (comment)
-    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false });
+    res.render('admin/editProduct', { docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false,
+    errorMessage: msg,
+    prod: {title: '', description: '', price: '', imageUrl: ''},
+    validationErrors: [] });
 }
 //mongoose
 exports.postAddProduct = (req, res, next) => {
@@ -17,6 +22,23 @@ exports.postAddProduct = (req, res, next) => {
     const desc = req.body.description;
     const price = req.body.price;
     const imgUrl = req.body.imageUrl;
+
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        console.log(errors.array())
+        return res.status(422).render('admin/editProduct', {
+            path: '/admin/editProduct',
+            editing: false,
+            isLoggedIn: req.session.user ? true : false,
+            docTitle: 'Add Product',
+            errorMessage: errors.array()[0].msg,
+            prod: {title: title, description: desc, price: price, imageUrl: imgUrl},
+            validationErrors: errors.array()
+        });
+    }
+
+    console.log('-------------************')
 
     const product = new Product({ title: title, price: price, description: desc, imageUrl: imgUrl, userId: req.session.user._id });
 
@@ -28,6 +50,11 @@ exports.postAddProduct = (req, res, next) => {
 
 //mongoose
 exports.getEditProduct = (req, res, next) => {
+
+    let msg = req.flash('error')
+    if (msg.length < 1) {
+        msg = null
+    }
 
     const editMode = req.query.edit;
 
@@ -46,8 +73,10 @@ exports.getEditProduct = (req, res, next) => {
                 docTitle: 'Edit Product',
                 path: 'admin/editProduct',
                 editing: editMode,
-                prod: product
-                , isLoggedIn: req.session.user ? true : false
+                prod: product,
+                errorMessage: msg
+                , isLoggedIn: req.session.user ? true : false,
+                validationErrors: []
             });
         });
 }
@@ -60,6 +89,22 @@ exports.postEditProduct = (req, res, next) => {
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
     const userId = req.user._id
+
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        console.log(errors.array())
+        return res.status(422).render('admin/editProduct', {
+            path: '/admin/editProduct',
+            editing: true,
+            isLoggedIn: req.session.user ? true : false,
+            docTitle: 'Edit Product',
+            errorMessage: errors.array()[0].msg,
+            prod: {title: updatedTitle, description: updatedDesc, price: updatedPrice, imageUrl: updatedUrl, _id: prodId},
+            validationErrors: errors.array()
+        });
+    }
+
 
     Product.findById(prodId)
         .then(product => {
@@ -78,7 +123,6 @@ exports.postEditProduct = (req, res, next) => {
             })
         })
         .catch(err => console.log(err));
-
 }
 //mongoose
 exports.postDeletedProduct = (req, res, next) => {
