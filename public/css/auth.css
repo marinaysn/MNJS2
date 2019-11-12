@@ -20,3 +20,9 @@
     background: rgb(248, 233, 240);
     text-align: center;
 }
+
+.invalid {
+    background: rgb(241, 209, 187);
+}
+
+
