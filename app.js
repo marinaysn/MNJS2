@@ -48,9 +48,15 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
     .then(user => {
+
+      if (!User){
+        return next();
+      }
       req.user =  user;
       next();
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      throw new Error(err)
+    });
 });
 
 app.use((req, res, next) =>{
