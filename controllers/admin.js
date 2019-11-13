@@ -55,18 +55,29 @@ exports.postAddProduct = (req, res, next) => {
         console.log("Row inserted")
         res.redirect('/')
     }).catch(err => {
-        //console.log('AN ERROR OCCURED!!!')
-        console.log(err.errmsg)
+        console.log('AN ERROR OCCURED!!!')
+       // console.log(err.errmsg)
         let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
-        return res.status(502).render('admin/editProduct', {
-            path: '/admin/editProduct',
+        // return res.status(502).render('admin/editProduct', {
+        //     path: '/admin/editProduct',
+        //     editing: false,
+        //     isLoggedIn: req.session.user ? true : false,
+        //     docTitle: 'Add Product',
+        //     errorMessage: str,
+        //     prod: { title: title, description: desc, price: price, imageUrl: imgUrl },
+        //     validationErrors: []
+        // });
+           
+
+        //res.redirect('/500Errors');
+         //   //or
+        res.render('500Errors', {path: '/500Errors',
             editing: false,
             isLoggedIn: req.session.user ? true : false,
-            docTitle: 'Add Product',
-            errorMessage: str,
-            prod: { title: title, description: desc, price: price, imageUrl: imgUrl },
-            validationErrors: []
-        });
+            docTitle: 'Error 500',
+            errorMessage: str}
+        );
+
     });
 }
 
