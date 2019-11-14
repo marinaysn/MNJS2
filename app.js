@@ -71,6 +71,7 @@ app.use(loginRoutes);
 app.use(shopRoutes);
 
 app.get('/500Errors', errorsController.get500error);
+app.use('/500', errorsController.get500);
 
 app.use(
   errorsController.get404error
