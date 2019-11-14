@@ -69,14 +69,20 @@ exports.postAddProduct = (req, res, next) => {
         // });
            
 
-        //res.redirect('/500Errors');
+       // res.redirect('/500Errors');
          //   //or
-        res.render('500Errors', {path: '/500Errors',
-            editing: false,
-            isLoggedIn: req.session.user ? true : false,
-            docTitle: 'Error 500',
-            errorMessage: str}
-        );
+        // res.render('500Errors', {path: '/500Errors',
+        //     editing: false,
+        //     isLoggedIn: req.session.user ? true : false,
+        //     docTitle: 'Error 500',
+        //     errorMessage: str}
+        // );
+        // //or
+        const error = new Error(err)
+            error.httpStatusCode = 500;
+            return next(error);
+
+
 
     });
 }
@@ -155,7 +161,13 @@ exports.postEditProduct = (req, res, next) => {
                 res.redirect('/admin/listOfProducts')
             })
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            const error = new Error(err)
+            error.httpStatusCode = 500;
+            return next(error);
+        
+        });
 }
 //mongoose
 exports.postDeletedProduct = (req, res, next) => {
@@ -183,7 +195,10 @@ exports.displayAllProduct = (req, res, next) => {
                     , isLoggedIn: req.session.user ? true : false
                 });
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err);
+            res.redirect('/500Errors');
+        })
 };
 
 //mongoose

@@ -76,6 +76,19 @@ app.use(
   errorsController.get404error
 );
 
+app.use((error, req, res, next) =>{
+ return res.redirect('/500');
+
+//  res.status(error.httpStatusCode)
+//  .render('500Errors', {path: '/500Errors',
+//             editing: false,
+//             isLoggedIn: req.session.user ? true : false,
+//             docTitle: 'Error 500',
+//             errorMessage: error}
+//         );
+  
+})
+
 mongoose
   .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
