@@ -69,7 +69,7 @@ exports.postAddProduct = (req, res, next) => {
         // });
            
 
-        res.redirect('500');
+        //return res.redirect('/500Errors');
          //   //or
         // res.render('500Errors', {path: '/500Errors',
         //     editing: false,
@@ -78,11 +78,9 @@ exports.postAddProduct = (req, res, next) => {
         //     errorMessage: str}
         // );
         // //or
-        // const error = new Error(err)
-        //     error.httpStatusCode = 500;
-        //     return next(error);
-
-
+        const error = new Error(str)
+            error.httpStatusCode = 500;
+            return next(error);
 
     });
 }

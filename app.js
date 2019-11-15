@@ -70,15 +70,17 @@ app.use(loginRoutes);
 // app.use(about);
 app.use(shopRoutes);
 
-app.get('/500Errors', errorsController.get500error);
-app.use('/500', errorsController.get500);
+//app.get('/500Errors', errorsController.get500error);
 
-app.use(
-  errorsController.get404error
-);
+// app.use(
+//   errorsController.get404error
+// );
+
+
 
 app.use((error, req, res, next) =>{
- return res.redirect('/500');
+  res.status(500)
+  res.redirect('/500Errors');
 
 //  res.status(error.httpStatusCode)
 //  .render('500Errors', {path: '/500Errors',
