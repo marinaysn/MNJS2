@@ -13,7 +13,12 @@ exports.displayProduct = (req, res, next) => {
                 hasProducts: products.length > 0
                 , isLoggedIn: req.session.user ? true : false
             });
-    }).catch(err => console.log(err))
+    }).catch(err => {
+        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+        const error = new Error(str)
+            error.httpStatusCode = 500;
+            return next(error);
+    });
 };
 
 //mongoose
@@ -33,7 +38,12 @@ exports.getProductByID = (req, res, next) => {
                     , isLoggedIn: req.session.user ? true : false
                 })
         }
-        ).catch(err => console.log(err));
+        ).catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 }
 
 //mongoose
@@ -49,8 +59,12 @@ exports.getIndex = (req, res, next) => {
                 hasProducts: products.length > 0
                
             });
-    })
-        .catch(err => console.log(err))
+    }).catch(err => {
+        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+        const error = new Error(str)
+            error.httpStatusCode = 500;
+            return next(error);
+    });
 }
 
 //getProducts
@@ -67,8 +81,12 @@ exports.getMyCartView = (req, res, next) => {
                 productCSS: true
                 , isLoggedIn: req.session.user ? true : false
             });
-    })
-        .catch(err => console.log(err))
+    }).catch(err => {
+        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+        const error = new Error(str)
+            error.httpStatusCode = 500;
+            return next(error);
+    });
 
 
 };
@@ -86,7 +104,12 @@ exports.postToCart = (req, res, next) => {
         .then(result => {
             res.redirect('/cart')
         })
-        .catch(err => { console.log(err) })
+        .catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 }
 //getCart
 exports.getCart = (req, res, next) => {
@@ -104,7 +127,12 @@ exports.getCart = (req, res, next) => {
                     , isLoggedIn: req.session.user ? true : false
                 });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 };
 
 exports.postCartDeleteItem = (req, res, next) => {
@@ -117,7 +145,12 @@ exports.postCartDeleteItem = (req, res, next) => {
 
             res.redirect('/cart')
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 
 }
 
@@ -150,7 +183,12 @@ exports.postOrder = (req, res, next) => {
         }).then(result => {
             res.redirect('/orders');
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 }
 
 // show Orders
@@ -167,7 +205,12 @@ exports.getMyOrders = (req, res, next) => {
                     , isLoggedIn: req.session.user ? true : false
                 })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 
 }
 
