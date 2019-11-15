@@ -2,7 +2,6 @@ const Product = require('../models/product');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 
-
 //mongoose
 exports.getAddEditProduct = (req, res, next) => {
 
@@ -43,7 +42,8 @@ exports.postAddProduct = (req, res, next) => {
     }
 
     const product = new Product({
-        _id: new mongoose.Types.ObjectId('5dbe4faed0ce5b3880a4eb46'),
+        //to test error handling
+       // _id: new mongoose.Types.ObjectId('5dbe4faed0ce5b3880a4eb46'),
         title: title,
         price: price,
         description: desc,
@@ -54,37 +54,16 @@ exports.postAddProduct = (req, res, next) => {
     product.save().then(result => {
         console.log("Row inserted")
         res.redirect('/')
-    }).catch(err => {
-        console.log('AN ERROR OCCURED!!!')
-       // console.log(err.errmsg)
-        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
-        // return res.status(502).render('admin/editProduct', {
-        //     path: '/admin/editProduct',
-        //     editing: false,
-        //     isLoggedIn: req.session.user ? true : false,
-        //     docTitle: 'Add Product',
-        //     errorMessage: str,
-        //     prod: { title: title, description: desc, price: price, imageUrl: imgUrl },
-        //     validationErrors: []
-        // });
-           
+    })
+    .catch(err => {
 
-        //return res.redirect('/500Errors');
-         //   //or
-        // res.render('500Errors', {path: '/500Errors',
-        //     editing: false,
-        //     isLoggedIn: req.session.user ? true : false,
-        //     docTitle: 'Error 500',
-        //     errorMessage: str}
-        // );
-        // //or
+        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
         const error = new Error(str)
             error.httpStatusCode = 500;
             return next(error);
 
     });
 }
-
 //mongoose
 exports.getEditProduct = (req, res, next) => {
 
@@ -142,7 +121,6 @@ exports.postEditProduct = (req, res, next) => {
         });
     }
 
-
     Product.findById(prodId)
         .then(product => {
 
@@ -160,11 +138,10 @@ exports.postEditProduct = (req, res, next) => {
             })
         })
         .catch(err => {
-            console.log(err);
-            const error = new Error(err)
-            error.httpStatusCode = 500;
-            return next(error);
-        
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
         });
 }
 //mongoose
@@ -175,15 +152,16 @@ exports.postDeletedProduct = (req, res, next) => {
         .then(result => {
             res.redirect('/admin/listOfProducts')
         }
-        ).catch(err => console.log(err));
+        ).catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);  
+        });
 };
-
 //mongoose
 exports.displayAllProduct = (req, res, next) => {
-
     Product.find({ userId: req.user._id })
-        // .select('title price -_id')
-        // .populate('userId', 'name')
         .then(products => {
             res.render('admin/listOfProducts',
                 {
@@ -194,21 +172,18 @@ exports.displayAllProduct = (req, res, next) => {
                 });
         })
         .catch(err => {
-            console.log(err);
-            res.redirect('/500Errors');
-        })
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+                error.httpStatusCode = 500;
+                return next(error);
+        });
 };
-
 //mongoose
 exports.getAdminProducts = (req, res, next) => {
     res.render('admin/adminProducts', { docTitle: 'Admin Page', path: '/admin/adminProducts', isLoggedIn: req.session.user ? true : false })
 }
-
 //mongoose
 exports.getCatalog = (req, res, next) => {
     res.render('admin/listOfProducts', { docTitle: 'List Of Products', path: '/admin/listOfProducts', isLoggedIn: req.session.user ? true : false })
 }
-
-
-
 
