@@ -42,10 +42,19 @@ app.use(session({secret: 'mySecretValue', resave: false, saveUninitialized: fals
 app.use(csrfProtection);
 app.use(flash());
 
+app.use((req, res, next) =>{
+  res.locals.isLoggedIn = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
+
 app.use((req, res, next) => {
+
+ // throw new Error('Sync');
   if (!req.session.user) {
    return next();
   }
+
   User.findById(req.session.user._id)
     .then(user => {
 
@@ -55,15 +64,12 @@ app.use((req, res, next) => {
       req.user =  user;
       next();
     }).catch(err => {
-      throw new Error(err)
+     next(new Error(err)) 
+   
     });
 });
 
-app.use((req, res, next) =>{
-  res.locals.isLoggedIn = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
-})
+
 
 app.use('/admin', adminRoutes);
 app.use(loginRoutes);
@@ -80,9 +86,6 @@ app.use(
 
 app.use((error, req, res, next) =>{
   res.status(500)
- // res.redirect('/500Errors');
-
- res.status(error.httpStatusCode)
  .render('500Errors', {path: '/500Errors',
             editing: false,
             isLoggedIn: req.session.user ? true : false,
