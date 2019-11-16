@@ -16,7 +16,7 @@ const isAuth = require('../middleware/isAuth');
     ,
     body('imageUrl', 'URL is not valid')
     .trim()
-    .isURL()
+    //.isURL()
     ,
     body('price', 'Enter valid number wit 2 decimal points')
     .trim()
@@ -40,7 +40,7 @@ const isAuth = require('../middleware/isAuth');
     ,
     body('imageUrl', 'URL is not valid')
     .trim()
-    .isURL()
+    //.isURL()
     ,
     body('price', 'Enter valid number wit 2 decimal points')
     .trim()
