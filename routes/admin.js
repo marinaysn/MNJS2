@@ -14,10 +14,6 @@ const isAuth = require('../middleware/isAuth');
     .isLength({ min: 3 })
     .isString()
     ,
-    body('imageUrl', 'URL is not valid')
-    .trim()
-    .isURL()
-    ,
     body('price', 'Enter valid number wit 2 decimal points')
     .trim()
     .isLength({ min: 1 })
@@ -37,10 +33,6 @@ const isAuth = require('../middleware/isAuth');
     .trim()
     .isLength({ min: 3 })
     .isString()
-    ,
-    body('imageUrl', 'URL is not valid')
-    .trim()
-    .isURL()
     ,
     body('price', 'Enter valid number wit 2 decimal points')
     .trim()

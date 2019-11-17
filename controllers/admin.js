@@ -14,7 +14,7 @@ exports.getAddEditProduct = (req, res, next) => {
     res.render('admin/editProduct', {
         docTitle: 'Add Product', path: '/admin/editProduct', editing: false, isLoggedIn: req.session.user ? true : false,
         errorMessage: msg,
-        prod: { title: '', description: '', price: '', imageUrl: '' },
+        prod: { title: '', description: '', price: '' },
         validationErrors: []
     });
 }
@@ -24,8 +24,20 @@ exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
     const desc = req.body.description;
     const price = req.body.price;
-    const imgUrl = req.body.imageUrl;
+    const image = req.file;
+    const imageUrl = req.file.path;
 
+    if (!image){
+        return res.status(422).render('admin/editProduct', {
+            path: '/admin/editProduct',
+            editing: false,
+            isLoggedIn: req.session.user ? true : false,
+            docTitle: 'Add Product',
+            errorMessage: 'Attachced file is not an image',
+            prod: { title: title, description: desc, price: price },
+            validationErrors: []
+        });
+    }
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -36,10 +48,12 @@ exports.postAddProduct = (req, res, next) => {
             isLoggedIn: req.session.user ? true : false,
             docTitle: 'Add Product',
             errorMessage: errors.array()[0].msg,
-            prod: { title: title, description: desc, price: price, imageUrl: imgUrl },
+            prod: { title: title, description: desc, price: price },
             validationErrors: errors.array()
         });
     }
+
+   
 
     const product = new Product({
         //to test error handling
@@ -47,7 +61,7 @@ exports.postAddProduct = (req, res, next) => {
         title: title,
         price: price,
         description: desc,
-        imageUrl: imgUrl,
+        imageUrl: imageUrl,
         userId: req.session.user._id
     });
 
@@ -100,7 +114,7 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
 
     const updatedTitle = req.body.title;
-    const updatedUrl = req.body.imageUrl;
+    const image = req.file;
     const updatedPrice = req.body.price;
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
@@ -116,7 +130,7 @@ exports.postEditProduct = (req, res, next) => {
             isLoggedIn: req.session.user ? true : false,
             docTitle: 'Edit Product',
             errorMessage: errors.array()[0].msg,
-            prod: { title: updatedTitle, description: updatedDesc, price: updatedPrice, imageUrl: updatedUrl, _id: prodId },
+            prod: { title: updatedTitle, description: updatedDesc, price: updatedPrice, _id: prodId },
             validationErrors: errors.array()
         });
     }
@@ -130,7 +144,10 @@ exports.postEditProduct = (req, res, next) => {
             product.description = updatedDesc;
             product.price = updatedPrice;
             product.title = updatedTitle;
-            product.imageUrl = updatedUrl;
+
+            if (image){
+                product.imageUrl = image.path;
+            }         
             product.userId = userId;
 
             return product.save().then(result => {

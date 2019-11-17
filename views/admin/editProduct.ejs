@@ -13,7 +13,7 @@
           <% } %> 
 
           
-      <form class="product-form" action="/admin/<% if(editing) { %>editProduct<% } else { %>addProduct<% }%>" method="POST">
+      <form class="product-form" action="/admin/<% if(editing) { %>editProduct<% } else { %>addProduct<% }%>" method="POST" enctype="multipart/form-data">
 
         <!-- title -->
         <div class="form-control">
@@ -22,10 +22,23 @@
         </div>
 
         <!-- imageUrl -->
-        <div class="form-control">
+        <!-- <div class="form-control">
           <label for="imageUrl">Image Url: </label>
-          <input type="url" name="imageUrl" id="imageUrl" value="<%= prod.imageUrl %>" />
+          <input 
+            type="url" 
+            name="imageUrl" 
+            id="imageUrl" 
+            value="<%= prod.imageUrl %>" />
+        </div> -->
+
+        <div class="form-control">
+          <label for="image">Image: </label>
+          <input 
+            type="file" 
+            name="image" 
+            id="image"  />
         </div>
+
 
         <!-- price -->
         <div class="form-control">
