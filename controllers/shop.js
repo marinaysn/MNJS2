@@ -250,15 +250,71 @@ exports.getInvoice = (req, res, next) => {
             pdfDoc.pipe(fs.createWriteStream(invoicePath));
             pdfDoc.pipe(res);
 
-            pdfDoc.text('Hello world!');
-            pdfDoc.end();
+           
 
+            pdfDoc
+            .fillColor("#241d63")
+            .fontSize(20)
+            .text("Company Inc.", 110, 57)
+            .fontSize(10)
+            .text("123 Main Street", 200, 65, { align: "right" })
+            .text("Toronto, ON, L4HL4H", 200, 80, { align: "right" })
+             .moveDown();
+
+            pdfDoc.fillColor("#10240d").fontSize(16).text('Invoice Number: ' + orderId).moveDown();
+
+            pdfDoc.fillColor("#0e140d").fontSize(14).text(`Invoice Date: ${order.date}`, 50, 215)
+            .text(`Balance Due: ${order.totalCostOrder}`, 50, 130)
+            .text(order.user.name, 350, 240)
+            .text(order.user.email, 350, 265)
+            .moveDown();
+
+            generateTableRow(
+                pdfDoc,
+                335,
+                'Item Title',
+                'Unit Price',
+                'Quantity',
+                'SubTotal'
+        );
+
+        pdfDoc.text('____________________________________________________________________________________________', 50, 340).moveDown();
+
+
+            let i,
+            invoiceTableTop = 330;
+
+            for (i = 0; i < order.products.length; i++) {
+            const item = order.products[i].product;
+            const position = invoiceTableTop + (i + 1) * 30;
+            generateTableRow(
+            pdfDoc,
+            position,
+            item.title,
+            item.price,
+            order.products[i].quantity,
+            order.products[i].totalCostItems
+    );
+  }
+
+
+            pdfDoc
+            .fontSize(12)
+            .text("Payment is due within 15 days. Thank you for your business.", 50, 680,
+            { align: "center", width: 500 });
+
+            pdfDoc.end();
         
     }).catch(err => {
         next(err)
     });
-
-
-
-
 }
+
+  function generateTableRow(doc, y, c1, c3, c4, c5) {
+    doc
+      .fontSize(10)
+      .text(c1, 50, y)
+      .text(c3, 280, y, { width: 90, align: "right" })
+      .text(c4, 370, y, { width: 90, align: "right" })
+      .text(c5, 0, y, { align: "right" });
+  }
