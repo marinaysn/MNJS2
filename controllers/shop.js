@@ -171,7 +171,7 @@ exports.postOrder = (req, res, next) => {
                 let itemsCost = 0;
 
                 //calculate totals
-                itemsCost = i.quantity*i.productId.price;
+                itemsCost = i.quantity * i.productId.price;
                 total = total + itemsCost;
 
                 return { quantity: i.quantity, product: { ...i.productId._doc }, totalCostItems: itemsCost }
@@ -238,83 +238,83 @@ exports.getInvoice = (req, res, next) => {
             return next(new Error('You are not authorized to see this order invoice'))
         }
 
-            const invoiceName = 'invoice-' + orderId + '.pdf';
-            const invoicePath = path.join('data', 'invoices', invoiceName);
+        const invoiceName = 'invoice-' + orderId + '.pdf';
+        const invoicePath = path.join('data', 'invoices', invoiceName);
 
 
-            let pdfDoc = new PDFDocument({margin: 50});
+        let pdfDoc = new PDFDocument({ margin: 50 });
 
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
 
-            pdfDoc.pipe(fs.createWriteStream(invoicePath));
-            pdfDoc.pipe(res);
+        pdfDoc.pipe(fs.createWriteStream(invoicePath));
+        pdfDoc.pipe(res);
 
-           
 
-            pdfDoc
+
+        pdfDoc
             .fillColor("#241d63")
             .fontSize(20)
-            .text("Company Inc.", 110, 57)
+            .text("Company Inc.", 50, 57)
             .fontSize(10)
             .text("123 Main Street", 200, 65, { align: "right" })
             .text("Toronto, ON, L4HL4H", 200, 80, { align: "right" })
-             .moveDown();
+            .moveDown();
 
-            pdfDoc.fillColor("#10240d").fontSize(16).text('Invoice Number: ' + orderId).moveDown();
+        pdfDoc.fillColor("#10240d").fontSize(16).text('Invoice Number: ' + orderId).moveDown();
 
-            pdfDoc.fillColor("#0e140d").fontSize(14).text(`Invoice Date: ${order.date}`, 50, 215)
-            .text(`Balance Due: ${order.totalCostOrder}`, 50, 130)
+        pdfDoc.fillColor("#0e140d").fontSize(14).text(`Invoice Date: ${order.date}`, 50, 215)
+            .text(`Balance Due: $ ${order.totalCostOrder}`, 50, 130)
             .text(order.user.name, 350, 240)
             .text(order.user.email, 350, 265)
             .moveDown();
 
-            generateTableRow(
-                pdfDoc,
-                335,
-                'Item Title',
-                'Unit Price',
-                'Quantity',
-                'SubTotal'
+        generateTableRow(
+            pdfDoc,
+            335,
+            'Item Title',
+            'Unit Price',
+            'Quantity',
+            'SubTotal'
         );
 
         pdfDoc.text('____________________________________________________________________________________________', 50, 340).moveDown();
 
 
-            let i,
+        let i,
             invoiceTableTop = 330;
 
-            for (i = 0; i < order.products.length; i++) {
+        for (i = 0; i < order.products.length; i++) {
             const item = order.products[i].product;
             const position = invoiceTableTop + (i + 1) * 30;
             generateTableRow(
-            pdfDoc,
-            position,
-            item.title,
-            item.price,
-            order.products[i].quantity,
-            order.products[i].totalCostItems
-    );
-  }
+                pdfDoc,
+                position,
+                item.title,
+                item.price,
+                order.products[i].quantity,
+                order.products[i].totalCostItems
+            );
+        }
+        pdfDoc.fontSize(24).text('Total: $' + order.totalCostOrder, 50, invoiceTableTop + ((order.products.length + 2) * 30))
 
+        pdfDoc
+            .fontSize(10)
+            .text("Payment is due within 15 days. Thank you for your business.", 50, 730,
+                { align: "center", width: 500 });
 
-            pdfDoc
-            .fontSize(12)
-            .text("Payment is due within 15 days. Thank you for your business.", 50, 680,
-            { align: "center", width: 500 });
+        pdfDoc.end();
 
-            pdfDoc.end();
-        
     }).catch(err => {
         next(err)
     });
 }
 
-  function generateTableRow(doc, y, c1, c3, c4, c5) {
+function generateTableRow(doc, y, c1, c3, c4, c5) {
     doc
-      .fontSize(10)
-      .text(c1, 50, y)
-      .text(c3, 280, y, { width: 90, align: "right" })
-      .text(c4, 370, y, { width: 90, align: "right" })
-      .text(c5, 0, y, { align: "right" });
-  }
+        .fontSize(10)
+        .text(c1, 50, y)
+        .text('$' + c3, 280, y, { width: 90, align: "right" })
+        .text(c4, 370, y, { width: 90, align: "right" })
+        .text('$' + c5, 0, y, { align: "right" });
+}

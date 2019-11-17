@@ -4,3 +4,5 @@ other
 database.js
 nodemailerApiKeys.js
 images
+data/invoices
+invoices
