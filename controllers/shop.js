@@ -1,8 +1,9 @@
+// require dependencies
 const Product = require('../models/product');
 const Order = require('../models/order');
 const fs = require('fs');
 const path = require('path');
-
+const PDFDocument = require('pdfkit');
 //mongoose
 exports.displayProduct = (req, res, next) => {
 
@@ -164,8 +165,16 @@ exports.postOrder = (req, res, next) => {
         .execPopulate()
         .then(user => {
 
+            let total = 0
+
             const products = user.cart.items.map(i => {
-                return { quantity: i.quantity, product: { ...i.productId._doc } }
+                let itemsCost = 0;
+
+                //calculate totals
+                itemsCost = i.quantity * i.productId.price;
+                total = total + itemsCost;
+
+                return { quantity: i.quantity, product: { ...i.productId._doc }, totalCostItems: itemsCost }
             });
 
             const order = new Order({
@@ -174,7 +183,8 @@ exports.postOrder = (req, res, next) => {
                     email: req.user.email,
                     userId: req.user
                 },
-                products: products
+                products: products,
+                totalCostOrder: total
             });
 
             order.save();
@@ -218,42 +228,93 @@ exports.getMyOrders = (req, res, next) => {
 
 exports.getInvoice = (req, res, next) => {
     const orderId = req.params.orderId;
-    const invoiceName = 'invoice-' + orderId + '.pdf';
-    const invoicePath = path.join('data', 'invoices', invoiceName);
 
     Order.findById(orderId).then(order => {
         if (!order) {
             return next(new Error('No order is found'))
         }
-        console.log('=====================')
-        console.log(order.user.userId.toString());
-        console.log(req.user._id)
-        if (order.user.userId.toString() === req.user._id.toString()) {
-            //Read Files
-            // fs.readFile(invoicePath, (err, data) => {
-            //     if (err) {
-            //         return next(err);
-            //     }
-            //     res.setHeader('Content-Type', 'application/pdf');
-            //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-            //    // res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
-            //     res.send(data);
-            // })
 
-            //Streaming Files
-            const file = fs.createReadStream(invoicePath);
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
-            file.pipe(res);
-
-        } else{
+        if (order.user.userId.toString() !== req.user._id.toString()) {
             return next(new Error('You are not authorized to see this order invoice'))
         }
+
+        const invoiceName = 'invoice-' + orderId + '.pdf';
+        const invoicePath = path.join('data', 'invoices', invoiceName);
+
+
+        let pdfDoc = new PDFDocument({ margin: 50 });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+
+        pdfDoc.pipe(fs.createWriteStream(invoicePath));
+        pdfDoc.pipe(res);
+
+
+
+        pdfDoc
+            .fillColor("#241d63")
+            .fontSize(20)
+            .text("Company Inc.", 50, 57)
+            .fontSize(10)
+            .text("123 Main Street", 200, 65, { align: "right" })
+            .text("Toronto, ON, L4HL4H", 200, 80, { align: "right" })
+            .moveDown();
+
+        pdfDoc.fillColor("#10240d").fontSize(16).text('Invoice Number: ' + orderId).moveDown();
+
+        pdfDoc.fillColor("#0e140d").fontSize(14).text(`Invoice Date: ${order.date}`, 50, 215)
+            .text(`Balance Due: $ ${order.totalCostOrder}`, 50, 130)
+            .text(order.user.name, 350, 240)
+            .text(order.user.email, 350, 265)
+            .moveDown();
+
+        generateTableRow(
+            pdfDoc,
+            335,
+            'Item Title',
+            'Unit Price',
+            'Quantity',
+            'SubTotal'
+        );
+
+        pdfDoc.text('____________________________________________________________________________________________', 50, 340).moveDown();
+
+
+        let i,
+            invoiceTableTop = 330;
+
+        for (i = 0; i < order.products.length; i++) {
+            const item = order.products[i].product;
+            const position = invoiceTableTop + (i + 1) * 30;
+            generateTableRow(
+                pdfDoc,
+                position,
+                item.title,
+                item.price,
+                order.products[i].quantity,
+                order.products[i].totalCostItems
+            );
+        }
+        pdfDoc.fontSize(24).text('Total: $' + order.totalCostOrder, 50, invoiceTableTop + ((order.products.length + 2) * 30))
+
+        pdfDoc
+            .fontSize(10)
+            .text("Payment is due within 15 days. Thank you for your business.", 50, 730,
+                { align: "center", width: 500 });
+
+        pdfDoc.end();
+
     }).catch(err => {
         next(err)
     });
+}
 
-
-
-
+function generateTableRow(doc, y, c1, c3, c4, c5) {
+    doc
+        .fontSize(10)
+        .text(c1, 50, y)
+        .text('$' + c3, 280, y, { width: 90, align: "right" })
+        .text(c4, 370, y, { width: 90, align: "right" })
+        .text('$' + c5, 0, y, { align: "right" });
 }

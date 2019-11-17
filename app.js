@@ -1,4 +1,5 @@
 // to start run 'node .\app.js' or 'npm start'
+// require dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -10,7 +11,6 @@ const errorsController = require('./controllers/errors');
 const connectionString = require('./util/database')
 const flash = require('connect-flash');
 const multer = require('multer');
-
 
 //create routes:
 const loginRoutes = require('./routes/login');
@@ -66,6 +66,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')); // image is coming from view add/edit products
 
+//set paths
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

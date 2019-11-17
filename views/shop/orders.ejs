@@ -13,12 +13,14 @@
           <li class="orders__item">
             <h3>Order - # <%= o._id %> </h3>
               <ul class="orders__products">
-                  <% o.products.forEach( p => { %>
+                 
+                <% o.products.forEach( p => { %>
                     <li class="order__products-item">
-                        <%= p.product.title %> - <%= p.quantity %>
+                        <%= p.product.title %> - <%= p.quantity %> - $<%= p.totalCostItems %>
                     </li>
                   <% }) %>
-                  <a href="/orders/<%=o._id%>">Invoice</a>
+                    <p>...........................</p>
+                    <p>TOTAL: $<%= o.totalCostOrder                      %> - <a href="/orders/<%=o._id%>">Invoice</a></p>
               </ul>
           </li>
          

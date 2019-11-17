@@ -27,9 +27,25 @@ const orderSchema = new Schema({
         quantity: {
             type: Number,
             require: true
+        },
+
+        totalCostItems: {
+            type: Number,
+           // require: true,
+            default: 0
         }
 
-    }]
+    }],
+    date: {
+        type: Date,
+        // `Date.now()` returns the current unix timestamp as a number
+        default: Date.now
+      },
+      totalCostOrder: {
+        type: Number,
+       // require: true,
+        default: 0
+    }
 
 });
 
