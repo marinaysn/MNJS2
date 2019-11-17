@@ -17,6 +17,7 @@ const isAuth = require('../middleware/isAuth');
 // //orders
   router.get('/orders',  isAuth, shopController.getMyOrders);
   router.post('/checkout', isAuth, shopController.postOrder);
+  router.get('/orders/:orderId', isAuth, shopController.getInvoice);
 
 // //delteing
  router.post('/cartDeleteItem', isAuth, shopController.postCartDeleteItem);
