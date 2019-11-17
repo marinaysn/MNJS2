@@ -229,16 +229,23 @@ exports.getInvoice = (req, res, next) => {
         console.log(order.user.userId.toString());
         console.log(req.user._id)
         if (order.user.userId.toString() === req.user._id.toString()) {
+            //Read Files
+            // fs.readFile(invoicePath, (err, data) => {
+            //     if (err) {
+            //         return next(err);
+            //     }
+            //     res.setHeader('Content-Type', 'application/pdf');
+            //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+            //    // res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
+            //     res.send(data);
+            // })
 
-            fs.readFile(invoicePath, (err, data) => {
-                if (err) {
-                    return next(err);
-                }
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-               // res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
-                res.send(data);
-            })
+            //Streaming Files
+            const file = fs.createReadStream(invoicePath);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
+            file.pipe(res);
+
         } else{
             return next(new Error('You are not authorized to see this order invoice'))
         }
