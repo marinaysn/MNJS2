@@ -1,8 +1,9 @@
+// require dependencies
 const Product = require('../models/product');
 const Order = require('../models/order');
 const fs = require('fs');
 const path = require('path');
-
+const PDFDocument = require('pdfkit');
 //mongoose
 exports.displayProduct = (req, res, next) => {
 
@@ -164,8 +165,16 @@ exports.postOrder = (req, res, next) => {
         .execPopulate()
         .then(user => {
 
+            let total = 0
+
             const products = user.cart.items.map(i => {
-                return { quantity: i.quantity, product: { ...i.productId._doc } }
+                let itemsCost = 0;
+
+                //calculate totals
+                itemsCost = i.quantity*i.productId.price;
+                total = total + itemsCost;
+
+                return { quantity: i.quantity, product: { ...i.productId._doc }, totalCostItems: itemsCost }
             });
 
             const order = new Order({
@@ -174,7 +183,8 @@ exports.postOrder = (req, res, next) => {
                     email: req.user.email,
                     userId: req.user
                 },
-                products: products
+                products: products,
+                totalCostOrder: total
             });
 
             order.save();
@@ -218,37 +228,32 @@ exports.getMyOrders = (req, res, next) => {
 
 exports.getInvoice = (req, res, next) => {
     const orderId = req.params.orderId;
-    const invoiceName = 'invoice-' + orderId + '.pdf';
-    const invoicePath = path.join('data', 'invoices', invoiceName);
 
     Order.findById(orderId).then(order => {
         if (!order) {
             return next(new Error('No order is found'))
         }
-        console.log('=====================')
-        console.log(order.user.userId.toString());
-        console.log(req.user._id)
-        if (order.user.userId.toString() === req.user._id.toString()) {
-            //Read Files
-            // fs.readFile(invoicePath, (err, data) => {
-            //     if (err) {
-            //         return next(err);
-            //     }
-            //     res.setHeader('Content-Type', 'application/pdf');
-            //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-            //    // res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
-            //     res.send(data);
-            // })
 
-            //Streaming Files
-            const file = fs.createReadStream(invoicePath);
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
-            file.pipe(res);
-
-        } else{
+        if (order.user.userId.toString() !== req.user._id.toString()) {
             return next(new Error('You are not authorized to see this order invoice'))
         }
+
+            const invoiceName = 'invoice-' + orderId + '.pdf';
+            const invoicePath = path.join('data', 'invoices', invoiceName);
+
+
+            let pdfDoc = new PDFDocument({margin: 50});
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+
+            pdfDoc.pipe(fs.createWriteStream(invoicePath));
+            pdfDoc.pipe(res);
+
+            pdfDoc.text('Hello world!');
+            pdfDoc.end();
+
+        
     }).catch(err => {
         next(err)
     });
