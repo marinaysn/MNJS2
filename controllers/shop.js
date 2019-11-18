@@ -85,7 +85,6 @@ exports.getIndex = (req, res, next) => {
                     .skip((page - 1) * ITEMS_PER_PAGE)
                     .limit(ITEMS_PER_PAGE)
         }).then(products => {
-            console.log(page)
             res.render('shop/index',
                 {
                     prods: products,
