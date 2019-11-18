@@ -41,6 +41,22 @@
         </article>
         <% } %>
       </div>
+
+      <section class="pegination">
+
+          <% if (hasPreviousPage) {%>
+          <a href="?page=<%= currentPage -1 %>"><</a>
+              <% } %>
+  
+            <% for (i = 1; i <= lastPage; i++) { %>
+              <a href="?page=<%= i %>" class="<%= currentPage == i ? 'activePage' : '' %>"><%= i %></a>
+              <% } %>
+  
+              <% if (hasNextPage) {%>
+                <a href="?page=<%= currentPage +1 %>">></a>
+              <% } %>
+        </section>
+        
       <% } else { %>
       <p>Your cart is empty</p>
       <% } %>

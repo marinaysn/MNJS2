@@ -1,148 +1,140 @@
 body {
-    margin: auto;
-  }
-  .main-header {
-    width: 100%;
-    height: 100%;
-    background: rgb(241, 240, 168);
-    color:rgb(10, 42, 78)
-   /* padding: 0 1.5rem; */
-  }
+  margin: auto;
+}
+.main-header {
+  width: 100%;
+  height: 100%;
+  background: rgb(241, 240, 168);
+  color: rgb(10, 42, 78);
+  /* padding: 0 1.5rem; */
+}
 
-  main {
-    padding: 1rem;
-  }
+main {
+  padding: 1rem;
+}
 
+.main-header-nav {
+  height: 100%;
+}
 
-  .main-header-nav {
-    height: 100%;
+.main-header-ul {
+  list-style: none;
+  margin: auto;
+  padding: 0;
+  display: flex;
+}
 
-  }
+.main-header-li {
+  border-top: 2px solid rgb(100, 75, 5);
+  border-bottom: 2px solid rgb(100, 75, 5);
+  border-right: 2px solid rgb(100, 75, 5);
+  border-radius: 0 25px 25px 0;
+  padding: 5px;
+  width: 18%;
+  text-align: center;
+  margin-left: -15px;
+}
 
-  .main-header-ul {
-    list-style: none;
-    margin: auto;
-    padding: 0;
-    display: flex;
-  }
+.main-header-li a {
+  color: rgb(10, 42, 78);
+}
 
-  .main-header-li {
-    border-top: 2px solid rgb(100, 75, 5);
-    border-bottom: 2px solid rgb(100, 75, 5);
-    border-right: 2px solid rgb(100, 75, 5);
-    border-radius: 0 25px 25px 0;
-    padding: 5px;
-    width: 18%;
-    text-align: center;
-    margin-left: -15px;
-  }
-
-  .main-header-li a {
-    color:rgb(10, 42, 78)
-  }
-
-  .firstItem {
-    border-left: 3px solid rgb(100, 75, 5);
-     margin-left: -25px;
-   /* margin-right: -5px;
+.firstItem {
+  border-left: 3px solid rgb(100, 75, 5);
+  margin-left: -25px;
+  /* margin-right: -5px;
     padding: 5px 0; */
-  }
+}
 
-  .main-header-li a {
-    text-decoration: none;
-  }
+.main-header-li a {
+  text-decoration: none;
+}
 
-  .main-header-li a:hover,
-  .main-header-li a:active {
-    color: rgb(228, 214, 238);
-  }
+.main-header-li a:hover,
+.main-header-li a:active {
+  color: rgb(228, 214, 238);
+}
 
-  .active {
-    background: rgb(107, 240, 240);
-    border-left: 2px solid rgb(100, 75, 5);
-    border-radius: 25px;
-    color:rgb(10, 42, 78);
-    margin-left: -25px;
-    padding-right: 15px;
-  }
+.active {
+  background: rgb(107, 240, 240);
+  border-left: 2px solid rgb(100, 75, 5);
+  border-radius: 25px;
+  color: rgb(10, 42, 78);
+  margin-left: -25px;
+  padding-right: 15px;
+}
 
-  .main-header-li:hover {
-    background: rgb(54, 7, 85);
-    border-radius: 25px;
-    color: rgb(228, 214, 238);
-    margin-left: -25px;
-    padding-right: 15px;
-  }
+.main-header-li:hover {
+  background: rgb(54, 7, 85);
+  border-radius: 25px;
+  color: rgb(228, 214, 238);
+  margin-left: -25px;
+  padding-right: 15px;
+}
 
-  .active:hover {
-    background: rgb(107, 240, 240);
-    border-right: 2px solid rgb(100, 75, 5);
-    border-radius: 25px;
-    color:rgb(10, 42, 78)
-  }
+.active:hover {
+  background: rgb(107, 240, 240);
+  border-right: 2px solid rgb(100, 75, 5);
+  border-radius: 25px;
+  color: rgb(10, 42, 78);
+}
 
+.firstItem:hover,
+.firstItem:active {
+  border-left: 3px solid rgb(100, 75, 5);
+  border-right: 2px solid rgb(100, 75, 5);
+  border-radius: 0 25px 25px 0;
+  margin-right: -10px;
+}
+product-form {
+  width: 20rem;
+  max-width: 90%;
+  margin: auto;
+}
 
-  .firstItem:hover,
-  .firstItem:active {
-    border-left: 3px solid rgb(100, 75, 5);
-    border-right: 2px solid rgb(100, 75, 5);
-    border-radius: 0 25px 25px 0;
-    margin-right: -10px;
-  }
-  product-form{
-    width: 20rem;
-    max-width: 90%;
-    margin: auto;
-  }
+.form-control label,
+.form-control input,
+.form-control textarea {
+  display: block;
+  width: 80%;
+}
 
-  .form-control label,
-  .form-control input,
-  .form-control textarea {
-    display: block;
-    width: 80%;
-  }
+.form-control input,
+.form-control textarea {
+  border: 1px solid rgb(6, 38, 68);
+  font: inherit;
+  border-radius: 5px;
+  margin: 5px 0 10px 0;
+}
 
-  .form-control input,
-  .form-control textarea {
-    border: 1px solid rgb(6, 38, 68);
-    font: inherit;
-    border-radius: 5px;
-    margin: 5px 0 10px 0;
-  }
+.form-control input:focus,
+.form-control textarea:focus {
+  outline: #0b7e70;
+}
 
-  .form-control input:focus,
-  .form-control textarea:focus {
-    outline: #0b7e70;
-  }
-  
+button {
+  font: inherit;
+  border: 1pz solid rgb(14, 4, 66);
+  background: rgb(186, 228, 247);
+  border-radius: 5px;
+  padding: 8px;
+  cursor: pointer;
+}
+button:hover,
+button:active {
+  background: rgb(10, 42, 78);
+  color: aliceblue;
+}
 
-  button {
-    font: inherit;
-    border: 1pz solid rgb(14, 4, 66);
-    background: rgb(186, 228, 247);
-    border-radius: 5px;
-    padding: 8px;
-    cursor: pointer;
-  }
-  button:hover,
-  button:active {
-    background: rgb(10, 42, 78);
-    color: aliceblue;
-  }
-
- 
-
-
-  /* grid */
+/* grid */
 
 .grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center ;
+  justify-content: center;
   align-items: center;
   width: 40%;
   margin-left: 30%;
-
 }
 
 .card {
@@ -151,7 +143,7 @@ body {
 }
 
 .card__header {
-  border-bottom: 1px solid rgb(145, 143, 78)
+  border-bottom: 1px solid rgb(145, 143, 78);
 }
 
 .card__header,
@@ -175,13 +167,13 @@ body {
 }
 
 .card__actions {
-    padding: 1rem;
-    text-align: center;
+  padding: 1rem;
+  text-align: center;
 }
 
 .card__actions button,
 .card__actions a {
-    margin: 0 0.25rem;
+  margin: 0 0.25rem;
 }
 
 .btn {
@@ -197,11 +189,10 @@ body {
 }
 
 .btn:hover,
-.btn:active{
+.btn:active {
   background-color: #00695c;
   color: white;
 }
-
 
 a.editBtn {
   font: inherit;
@@ -212,11 +203,7 @@ a.editBtn {
   padding: 8px 0;
 }
 
-
-
-
 /* product */
-
 
 .product-form {
   width: 20rem;
@@ -227,16 +214,14 @@ a.editBtn {
 .product-item {
   width: 20rem;
   max-width: 95%;
-  
 }
 
 .product__title {
   font-size: 1.2rem;
   text-align: center;
- 
 }
 
-.title__decoration{
+.title__decoration {
   text-decoration-line: underline;
   /* text-decoration-style: wavy; */
 }
@@ -252,13 +237,32 @@ a.editBtn {
 }
 
 .red {
-  color: rgb(196, 12, 12)
+  color: rgb(196, 12, 12);
 }
 
-.pageNotFoundStyle{
-  color: rgb(196, 35, 35); 
-  text-align: center; 
+.pageNotFoundStyle {
+  color: rgb(196, 35, 35);
+  text-align: center;
   margin-top: 8rem;
   font-size: 3rem;
 }
 
+.pegination {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pegination a {
+  text-decoration: none;
+  color: rgb(7, 68, 7);
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border: 1px, solid rgb(2, 59, 2);
+}
+
+.pegination a:hover,
+.pegination a:active,
+.pegination a.activePage {
+  background: rgb(5, 59, 52);
+  color: rgb(234, 243, 234);
+}
