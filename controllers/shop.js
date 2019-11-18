@@ -4,10 +4,24 @@ const Order = require('../models/order');
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+
+const ITEMS_PER_PAGE = 5;
+
 //mongoose
 exports.displayProduct = (req, res, next) => {
 
-    Product.find().then(products => {
+    const page = +req.query.page || 1;
+    let totalItems = 0;
+
+    Product.find()
+    .countDocuments()
+        .then(numOfProducts => {
+            totalItems = numOfProducts;
+            return Product.find()
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE)
+        })
+    .then(products => {
         res.render('shop/productList',
             {
                 prods: products,
@@ -15,6 +29,13 @@ exports.displayProduct = (req, res, next) => {
                 path: '/productList',
                 hasProducts: products.length > 0
                 , isLoggedIn: req.session.user ? true : false
+                , totalItems: totalItems,
+                hasNextPage: (ITEMS_PER_PAGE * page) < totalItems,
+                hasPreviousPage: page > 1,
+                nextPage: page + 1,
+                prevPage: page -1,
+                lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
+                currentPage: page 
             });
     }).catch(err => {
         let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
@@ -52,22 +73,39 @@ exports.getProductByID = (req, res, next) => {
 //mongoose
 exports.getIndex = (req, res, next) => {
 
-    Product.find().then(products => {
-        res.render('shop/index',
+    const page = +req.query.page || 1;
+    let totalItems = 0;
 
-            {
-                prods: products,
-                docTitle: 'Main Page',
-                path: '/',
-                hasProducts: products.length > 0
-
-            });
-    }).catch(err => {
-        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
-        const error = new Error(str)
-        error.httpStatusCode = 500;
-        return next(error);
-    });
+    Product
+        .find()
+        .countDocuments()
+        .then(numOfProducts => {
+            totalItems = numOfProducts;
+            return Product.find()
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE)
+        }).then(products => {
+            res.render('shop/index',
+                {
+                    prods: products,
+                    docTitle: 'Main Page',
+                    path: '/',
+                    hasProducts: products.length > 0,
+                    
+                    totalItems: totalItems,
+                    hasNextPage: (ITEMS_PER_PAGE * page) < totalItems,
+                    hasPreviousPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page -1,
+                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
+                    currentPage: page 
+                });
+        }).catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 }
 
 //getProducts

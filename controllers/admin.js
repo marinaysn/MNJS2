@@ -2,6 +2,8 @@ const Product = require('../models/product');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const fileHelper = require('../util/file');
+
+const ITEMS_PER_PAGE = 5;
 //mongoose
 exports.getAddEditProduct = (req, res, next) => {
 
@@ -185,7 +187,18 @@ exports.postDeletedProduct = (req, res, next) => {
 };
 //mongoose
 exports.displayAllProduct = (req, res, next) => {
+   
+    const page = +req.query.page || 1;
+    let totalItems = 0;
+
     Product.find({ userId: req.user._id })
+    .countDocuments()
+        .then(numOfProducts => {
+            totalItems = numOfProducts;
+            return Product.find()
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE)
+        })
         .then(products => {
             res.render('admin/listOfProducts',
                 {
@@ -193,6 +206,13 @@ exports.displayAllProduct = (req, res, next) => {
                     docTitle: 'All Products in the Cart',
                     path: '/admin/listOfProducts'
                     , isLoggedIn: req.session.user ? true : false
+                    ,  totalItems: totalItems,
+                    hasNextPage: (ITEMS_PER_PAGE * page) < totalItems,
+                    hasPreviousPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page -1,
+                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
+                    currentPage: page 
                 });
         })
         .catch(err => {
