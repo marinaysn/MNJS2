@@ -29,7 +29,7 @@ exports.postAddProduct = (req, res, next) => {
     const image = req.file;
     const imageUrl = req.file.path;
 
-    if (!image){
+    if (!image) {
         return res.status(422).render('admin/editProduct', {
             path: '/admin/editProduct',
             editing: false,
@@ -55,11 +55,11 @@ exports.postAddProduct = (req, res, next) => {
         });
     }
 
-   
+
 
     const product = new Product({
         //to test error handling
-       // _id: new mongoose.Types.ObjectId('5dbe4faed0ce5b3880a4eb46'),
+        // _id: new mongoose.Types.ObjectId('5dbe4faed0ce5b3880a4eb46'),
         title: title,
         price: price,
         description: desc,
@@ -71,14 +71,14 @@ exports.postAddProduct = (req, res, next) => {
         console.log("Row inserted")
         res.redirect('/')
     })
-    .catch(err => {
+        .catch(err => {
 
-        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
-        const error = new Error(str)
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
             error.httpStatusCode = 500;
             return next(error);
 
-    });
+        });
 }
 //mongoose
 exports.getEditProduct = (req, res, next) => {
@@ -147,10 +147,10 @@ exports.postEditProduct = (req, res, next) => {
             product.price = updatedPrice;
             product.title = updatedTitle;
 
-            if (image){
+            if (image) {
                 fileHelper.deleteFile(product.imageUrl);
                 product.imageUrl = image.path;
-            }         
+            }
             product.userId = userId;
 
             return product.save().then(result => {
@@ -160,44 +160,44 @@ exports.postEditProduct = (req, res, next) => {
         .catch(err => {
             let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
             const error = new Error(str)
-                error.httpStatusCode = 500;
-                return next(error);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 }
 //mongoose
 exports.postDeletedProduct = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.findById(prodId).then( p =>{
+    Product.findById(prodId).then(p => {
 
-        if (!p){
+        if (!p) {
             return next(new Error('Product not Found'))
         }
         fileHelper.deleteFile(p.imageUrl);
         return Product.deleteOne({ _id: prodId, userId: req.user._id })
-    }   
+    }
     ).then(result => {
         res.redirect('/admin/listOfProducts')
     }
-      ).catch(err => {
-            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
-            const error = new Error(str)
-                error.httpStatusCode = 500;
-                return next(error);  
-        });
+    ).catch(err => {
+        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+        const error = new Error(str)
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 //mongoose
 exports.displayAllProduct = (req, res, next) => {
-   
+
     const page = +req.query.page || 1;
     let totalItems = 0;
 
     Product.find({ userId: req.user._id })
-    .countDocuments()
+        .countDocuments()
         .then(numOfProducts => {
             totalItems = numOfProducts;
             return Product.find()
-                    .skip((page - 1) * ITEMS_PER_PAGE)
-                    .limit(ITEMS_PER_PAGE)
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE)
         })
         .then(products => {
             res.render('admin/listOfProducts',
@@ -206,20 +206,20 @@ exports.displayAllProduct = (req, res, next) => {
                     docTitle: 'All Products in the Cart',
                     path: '/admin/listOfProducts'
                     , isLoggedIn: req.session.user ? true : false
-                    ,  totalItems: totalItems,
+                    , totalItems: totalItems,
                     hasNextPage: (ITEMS_PER_PAGE * page) < totalItems,
                     hasPreviousPage: page > 1,
                     nextPage: page + 1,
-                    prevPage: page -1,
+                    prevPage: page - 1,
                     lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
-                    currentPage: page 
+                    currentPage: page
                 });
         })
         .catch(err => {
             let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
             const error = new Error(str)
-                error.httpStatusCode = 500;
-                return next(error);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 };
 //mongoose
