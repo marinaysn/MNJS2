@@ -185,6 +185,28 @@ exports.postDeletedProduct = (req, res, next) => {
         return next(error);
     });
 };
+
+exports.deleteProduct = (req, res, next) => {
+    const prodId = req.params.productId;
+
+
+    Product.findById(prodId).then( p =>{
+
+        if (!p){
+            return next(new Error('Product not Found'))
+        }
+        fileHelper.deleteFile(p.imageUrl);
+        return Product.deleteOne({ _id: prodId, userId: req.user._id })
+    }   
+    ).then(result => {
+       // res.redirect('/admin/listOfProducts')
+       res.status(200).json({ message: 'Product successfuly deleted'});
+    }
+      ).catch(err => {
+            res.status(500).json({ message: 'Failed to delete the product'});
+        });
+};
+
 //mongoose
 exports.displayAllProduct = (req, res, next) => {
 
