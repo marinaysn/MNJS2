@@ -51,11 +51,10 @@ router.get('/adminProducts', isAuth, adminController.getAdminProducts);
 router.get('/listOfProducts', isAuth, adminController.displayAllProduct);
 
 //delete
-<<<<<<< HEAD
+
 router.post('/deleteProduct', isAuth, adminController.postDeletedProduct);
-=======
+
   //router.post('/deleteProduct', isAuth, adminController.postDeletedProduct);
->>>>>>> 6f75055b0d9a28a4dbefe344f5463d2f32fa3216
 
   router.delete('/listOfProducts/:productId', isAuth, adminController.deleteProduct);
 module.exports = router;

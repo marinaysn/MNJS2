@@ -22,5 +22,9 @@ const isAuth = require('../middleware/isAuth');
 // //delteing
  router.post('/cartDeleteItem', isAuth, shopController.postCartDeleteItem);
 
+ //checkout
+ router.get('/checkout', isAuth, shopController.getCheckout)
+ router.get('/checkout/success', isAuth, shopController.getCheckout)
+ router.get('/checkout/cancel', isAuth, shopController.getCheckoutSuccess)
 
 module.exports = router;

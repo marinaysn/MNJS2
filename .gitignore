@@ -6,3 +6,4 @@ nodemailerApiKeys.js
 images
 data/invoices
 invoices
+stripeAPI.js

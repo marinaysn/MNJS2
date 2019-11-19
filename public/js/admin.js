@@ -1,4 +1,4 @@
-const deleteProduct =(btn) => {
+const deleteProduct = (btn) => {
     console.log('clicked!')
 
     const prodID = btn.parentNode.querySelector('[name=productId]').value;
@@ -10,13 +10,13 @@ const deleteProduct =(btn) => {
         headers: {
             'csrf-token': csrf
         }
-    }).then(result =>{
+    }).then(result => {
         console.log(result)
         return result.json();
     }).then(data => {
         console.log(data)
-       // productElement.remove();
+        // productElement.remove();
         productElement.parentNode.removeChild(productElement);
     })
-    .catch(err => console.log(err));
+        .catch(err => console.log(err));
 }

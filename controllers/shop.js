@@ -4,6 +4,8 @@ const Order = require('../models/order');
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const stripeAPI = require('../util/stripeAPI')
+const stripe = require('stripe')(stripeAPI);
 
 const ITEMS_PER_PAGE = 5;
 
@@ -241,6 +243,51 @@ exports.postOrder = (req, res, next) => {
         });
 }
 
+exports.getCheckoutSuccess = (req, res, next) => {
+
+    req.user
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then(user => {
+
+            let total = 0
+
+            const products = user.cart.items.map(i => {
+                let itemsCost = 0;
+
+                //calculate totals
+                itemsCost = i.quantity * i.productId.price;
+                total = total + itemsCost;
+
+                return { quantity: i.quantity, product: { ...i.productId._doc }, totalCostItems: itemsCost }
+            });
+
+            const order = new Order({
+                user: {
+                    name: req.user.name,
+                    email: req.user.email,
+                    userId: req.user
+                },
+                products: products,
+                totalCostOrder: total
+            });
+
+            order.save();
+
+        }).then(result => {
+            return req.user.clearCart();
+
+        }).then(result => {
+            res.redirect('/orders');
+        })
+        .catch(err => {
+            let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+            const error = new Error(str)
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+}
+
 // show Orders
 exports.getMyOrders = (req, res, next) => {
 
@@ -345,6 +392,50 @@ exports.getInvoice = (req, res, next) => {
 
     }).catch(err => {
         next(err)
+    });
+}
+
+
+//checkout
+exports.getCheckout = (req, res, next) =>{
+    let products;
+    let total = 0;
+    req.user
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+        products = user.cart.items;
+        products.forEach(p =>{
+            total += p.quantity * p.productId.price
+        })
+        return stripe.checkout.session.create({
+            payment_method_types: ['card'],
+            line_items: products.map(p=>{
+                return {
+                    name: p.productId.title,
+                    description: p.productId.description,
+                    ammount: p.productId.price *100,
+                    quantity: p.quantity
+                };
+            }),
+            success_url: req.protocol + '://' + req.get('host') + '/checkout/success' ,
+            cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+        });    
+    }).then( session => {
+        res.render('shop/checkout',
+        {
+            docTitle: 'Checkout'
+            , path: '/checkout'
+            , prods: products
+            , total: total
+            , sessionId: session.id
+        });
+    })
+    .catch(err => {
+        let str = err.errmsg.substring(err.errmsg.indexOf(' '), err.errmsg.indexOf(':'))
+        const error = new Error(str)
+        error.httpStatusCode = 500;
+        return next(error);
     });
 }
 
