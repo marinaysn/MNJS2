@@ -51,6 +51,9 @@ const isAuth = require('../middleware/isAuth');
   router.get('/listOfProducts',  isAuth, adminController.displayAllProduct);
 
 //delete
-  router.post('/deleteProduct', isAuth, adminController.postDeletedProduct);
+  //router.post('/deleteProduct', isAuth, adminController.postDeletedProduct);
 
+  router.delete('/listOfProducts/:productId', isAuth, adminController.deleteProduct);
 module.exports = router;
+
+
