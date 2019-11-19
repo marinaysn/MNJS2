@@ -35,13 +35,13 @@
             
            <!-- <%- include('../includes/edit.ejs', {prod: p}) %> -->
           <a href="/admin/editProduct/<%= p._id %>?edit=true" class="btn editBtn">Edit</a>
-           <form action="/admin/deleteProduct" method="POST">  
+           <!-- <form action="/admin/deleteProduct" method="POST">   -->
             
             <input type="hidden" name="productId" value="<%= p._id %>">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn">Delete</button>
+            <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
            
-        </form>
+        <!-- </form> -->
 
            
           </div>
@@ -56,3 +56,5 @@
       <% } %>
       </main>
     <%- include('../includes/end.ejs') %>
+
+    <script src="/js/admin.js"></script>
