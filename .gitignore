@@ -1,7 +1,7 @@
 node_modules
 marinaTests
 other
-database.js
+# database.js
 nodemailerApiKeys.js
 images
 data/invoices
