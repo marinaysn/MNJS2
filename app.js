@@ -8,7 +8,8 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const errorsController = require('./controllers/errors');
-const connectionString = require('./util/database')
+//const connectionString = require('./util/database')
+const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@marnode-vxzld.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
 
 const flash = require('connect-flash');
 const multer = require('multer');
