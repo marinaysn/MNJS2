@@ -9,6 +9,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const errorsController = require('./controllers/errors');
 const connectionString = require('./util/database')
+
 const flash = require('connect-flash');
 const multer = require('multer');
 
@@ -133,6 +134,6 @@ mongoose
   .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
     console.log('Connected');
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch(err => console.log(err));
