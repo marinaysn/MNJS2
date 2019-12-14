@@ -2,9 +2,9 @@ node_modules
 marinaTests
 other
 # database.js
-nodemailerApiKeys.js
+# nodemailerApiKeys.js
 images
 data/invoices
 invoices
-stripeAPI.js
-nodemon.json
+# stripeAPI.js
+# nodemon.json
