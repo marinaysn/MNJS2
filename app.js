@@ -112,8 +112,6 @@ app.use(
   errorsController.get404error
 );
 
-
-
 app.use((error, req, res, next) => {
   res.status(500)
     .render('500Errors', {
@@ -124,7 +122,6 @@ app.use((error, req, res, next) => {
       errorMessage: error
     }
     );
-
 })
 
 mongoose
