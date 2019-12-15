@@ -16,7 +16,6 @@ const multer = require('multer');
 
 //create routes:
 const loginRoutes = require('./routes/login');
-// const about = require('./routes/about');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
