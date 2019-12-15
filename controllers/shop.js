@@ -4,7 +4,7 @@ const Order = require('../models/order');
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
-const stripeAPI = require('../util/stripeAPI')
+const stripeAPI = require('../util/util2/stripeAPI')
 const stripe = require('stripe')(stripeAPI);
 
 const ITEMS_PER_PAGE = 5;
