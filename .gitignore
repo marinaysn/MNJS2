@@ -3,8 +3,8 @@ marinaTests
 other
 database.js
 nodemailerApiKeys.js
-# images
-# data/invoices
-# invoices
+images
+data/invoices
+invoices
 stripeAPI.js
-# nodemon.json
+nodemon.json
